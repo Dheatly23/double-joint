@@ -20,7 +20,7 @@ So perhaps with it, we can put this algorithm into people's hand.
 
 ## How it Works
 
-See the notebook or SPEC.md (coming soon)
+See the notebook or [SPEC.md](spec/SPEC.md)
 
 ## License
 

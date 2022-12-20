@@ -70,7 +70,7 @@ and rotate.
 There is another way of finding the rotated plane, the core of Double Joint.
 As seen from the blue triangle, $\overline{A'A}$ is sine of $r_y$.
 Equation 1 shows to find it, start from $\overline{OA'}$
-($O$ is not the origin).
+( $O$ is not the origin).
 Statement 2 shows relation to axis of rotation $\overrightarrow{X}$.
 To find $\overrightarrow{X}$, we use equation 3.
 Equation 4 is used to find signed distance $\left\| OA' \right\|$.

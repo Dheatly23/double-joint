@@ -8,7 +8,7 @@ Normally, voxel size is $1\text{x}1\text{x}1$ cube. But the size of voxels
 at joint is $1\text{x}\sqrt{2}\text{x}1$. When you rotate the arm
 90 degrees at 45 degrees offset, it will rotate the diagonal at 45 degrees
 slope. Because the length of diagonal is $\sqrt{2}$, then the height must be
-$sqrt{2}$.
+$\sqrt{2}$.
 
 Other voxels will not be affected, non-joint or single joint (think elbow).
 

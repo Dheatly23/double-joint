@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://script/SingleJoint.gd" type="Script" id=1]
+[ext_resource path="res://shader/SingleJoint.gdshader" type="Shader" id=2]
+[ext_resource path="res://models/SingleJoint.mesh" type="ArrayMesh" id=3]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 2 )
+shader_param/rot_x = 0.0
+shader_param/rotated = false
+shader_param/axis_z = false
+shader_param/skin_scale = Vector2( 1, 1 )
+shader_param/skin_offset = Vector2( 0, 0 )
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 2 )
+shader_param/rot_x = 0.0
+shader_param/rotated = true
+shader_param/axis_z = false
+shader_param/skin_scale = Vector2( 1, 1 )
+shader_param/skin_offset = Vector2( 0, 0 )
+
+[node name="SingleJoint" type="MeshInstance"]
+mesh = ExtResource( 3 )
+material/0 = SubResource( 1 )
+material/1 = SubResource( 2 )
+script = ExtResource( 1 )

@@ -1,0 +1,362 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://img/bitfont.fnt" type="BitmapFont" id=1]
+[ext_resource path="res://Slider.tscn" type="PackedScene" id=2]
+[ext_resource path="res://script/UI.gd" type="Script" id=3]
+
+[node name="Root" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+
+[node name="GridContainer" type="GridContainer" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 10.0
+margin_bottom = 10.0
+custom_constants/vseparation = 2
+custom_constants/hseparation = 5
+columns = 2
+
+[node name="LShoulderXLbl" type="Label" parent="GridContainer"]
+margin_right = 102.0
+margin_bottom = 8.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Left Shoulder X:"
+
+[node name="LShoulderX" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_right = 207.0
+margin_bottom = 8.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="LShoulderYLbl" type="Label" parent="GridContainer"]
+margin_top = 10.0
+margin_right = 102.0
+margin_bottom = 18.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Left Shoulder Y:"
+
+[node name="LShoulderY" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 10.0
+margin_right = 207.0
+margin_bottom = 18.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="LShoulderZLbl" type="Label" parent="GridContainer"]
+margin_top = 20.0
+margin_right = 102.0
+margin_bottom = 28.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Left Shoulder Z:"
+
+[node name="LShoulderZ" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 20.0
+margin_right = 207.0
+margin_bottom = 28.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="LElbowLbl" type="Label" parent="GridContainer"]
+margin_top = 30.0
+margin_right = 102.0
+margin_bottom = 38.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Left Elbow:"
+
+[node name="LElbow" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 30.0
+margin_right = 207.0
+margin_bottom = 38.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="RShoulderXLbl" type="Label" parent="GridContainer"]
+margin_top = 40.0
+margin_right = 102.0
+margin_bottom = 48.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Right Shoulder X:"
+
+[node name="RShoulderX" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 40.0
+margin_right = 207.0
+margin_bottom = 48.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="RShoulderYLbl" type="Label" parent="GridContainer"]
+margin_top = 50.0
+margin_right = 102.0
+margin_bottom = 58.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Right Shoulder Y:"
+
+[node name="RShoulderY" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 50.0
+margin_right = 207.0
+margin_bottom = 58.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="RShoulderZLbl" type="Label" parent="GridContainer"]
+margin_top = 60.0
+margin_right = 102.0
+margin_bottom = 68.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Right Shoulder Z:"
+
+[node name="RShoulderZ" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 60.0
+margin_right = 207.0
+margin_bottom = 68.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="RElbowLbl" type="Label" parent="GridContainer"]
+margin_top = 70.0
+margin_right = 102.0
+margin_bottom = 78.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Right Elbow:"
+
+[node name="RElbow" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 70.0
+margin_right = 207.0
+margin_bottom = 78.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="LLegXLbl" type="Label" parent="GridContainer"]
+margin_top = 80.0
+margin_right = 102.0
+margin_bottom = 88.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Left Leg X:"
+
+[node name="LLegX" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 80.0
+margin_right = 207.0
+margin_bottom = 88.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="LLegYLbl" type="Label" parent="GridContainer"]
+margin_top = 90.0
+margin_right = 102.0
+margin_bottom = 98.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Left Leg Y:"
+
+[node name="LLegY" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 90.0
+margin_right = 207.0
+margin_bottom = 98.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="LLegZLbl" type="Label" parent="GridContainer"]
+margin_top = 100.0
+margin_right = 102.0
+margin_bottom = 108.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Left Leg Z:"
+
+[node name="LLegZ" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 100.0
+margin_right = 207.0
+margin_bottom = 108.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="LKneeLbl" type="Label" parent="GridContainer"]
+margin_top = 110.0
+margin_right = 102.0
+margin_bottom = 118.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Left Knee:"
+
+[node name="LKnee" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 110.0
+margin_right = 207.0
+margin_bottom = 118.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="RLegXLbl" type="Label" parent="GridContainer"]
+margin_top = 120.0
+margin_right = 102.0
+margin_bottom = 128.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Right Leg X:"
+
+[node name="RLegX" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 120.0
+margin_right = 207.0
+margin_bottom = 128.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="RLegYLbl" type="Label" parent="GridContainer"]
+margin_top = 130.0
+margin_right = 102.0
+margin_bottom = 138.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Right Leg Y:"
+
+[node name="RLegY" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 130.0
+margin_right = 207.0
+margin_bottom = 138.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="RLegZLbl" type="Label" parent="GridContainer"]
+margin_top = 140.0
+margin_right = 102.0
+margin_bottom = 148.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Right Leg Z:"
+
+[node name="RLegZ" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 140.0
+margin_right = 207.0
+margin_bottom = 148.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="RKneeLbl" type="Label" parent="GridContainer"]
+margin_top = 150.0
+margin_right = 102.0
+margin_bottom = 158.0
+custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 1 )
+text = "Right Knee:"
+
+[node name="RKnee" parent="GridContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 107.0
+margin_top = 150.0
+margin_right = 207.0
+margin_bottom = 158.0
+fraction = 0.5
+slider_color = Color( 1, 0, 0, 1 )
+
+[node name="Button" type="Button" parent="GridContainer"]
+margin_top = 160.0
+margin_right = 102.0
+margin_bottom = 174.0
+custom_fonts/font = ExtResource( 1 )
+text = "Reset"
+
+[connection signal="slider_updated" from="GridContainer/LShoulderX" to="." method="_update_slider" binds= [ "lshoulder_rx" ]]
+[connection signal="slider_updated" from="GridContainer/LShoulderY" to="." method="_update_slider" binds= [ "lshoulder_ry" ]]
+[connection signal="slider_updated" from="GridContainer/LShoulderZ" to="." method="_update_slider" binds= [ "lshoulder_rz" ]]
+[connection signal="slider_updated" from="GridContainer/LElbow" to="." method="_update_slider" binds= [ "lelbow_r" ]]
+[connection signal="slider_updated" from="GridContainer/RShoulderX" to="." method="_update_slider" binds= [ "rshoulder_rx" ]]
+[connection signal="slider_updated" from="GridContainer/RShoulderY" to="." method="_update_slider" binds= [ "rshoulder_ry" ]]
+[connection signal="slider_updated" from="GridContainer/RShoulderZ" to="." method="_update_slider" binds= [ "rshoulder_rz" ]]
+[connection signal="slider_updated" from="GridContainer/RElbow" to="." method="_update_slider" binds= [ "relbow_r" ]]
+[connection signal="slider_updated" from="GridContainer/LLegX" to="." method="_update_slider" binds= [ "lleg_rx" ]]
+[connection signal="slider_updated" from="GridContainer/LLegY" to="." method="_update_slider" binds= [ "lleg_ry" ]]
+[connection signal="slider_updated" from="GridContainer/LLegZ" to="." method="_update_slider" binds= [ "lleg_rz" ]]
+[connection signal="slider_updated" from="GridContainer/LKnee" to="." method="_update_slider" binds= [ "lknee_r" ]]
+[connection signal="slider_updated" from="GridContainer/RLegX" to="." method="_update_slider" binds= [ "rleg_rx" ]]
+[connection signal="slider_updated" from="GridContainer/RLegY" to="." method="_update_slider" binds= [ "rleg_ry" ]]
+[connection signal="slider_updated" from="GridContainer/RLegZ" to="." method="_update_slider" binds= [ "rleg_rz" ]]
+[connection signal="slider_updated" from="GridContainer/RKnee" to="." method="_update_slider" binds= [ "rknee_r" ]]
+[connection signal="pressed" from="GridContainer/Button" to="." method="_reset_values"]

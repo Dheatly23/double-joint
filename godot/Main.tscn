@@ -1,0 +1,42 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://script/Camera.gd" type="Script" id=1]
+[ext_resource path="res://script/PlayerMesh.gd" type="Script" id=2]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://UI.tscn" type="PackedScene" id=4]
+[ext_resource path="res://img/skin2.png" type="Texture" id=5]
+[ext_resource path="res://script/Player.gd" type="Script" id=6]
+
+[sub_resource type="SpatialMaterial" id=1]
+
+[node name="Root" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 30 )
+script = ExtResource( 1 )
+dist = 50.0
+
+[node name="Player" type="ImmediateGeometry" parent="."]
+visible = false
+material_override = SubResource( 1 )
+script = ExtResource( 2 )
+texture = ExtResource( 5 )
+
+[node name="Light" type="DirectionalLight" parent="."]
+transform = Transform( -1, 4.37114e-08, -7.57103e-08, 0, 0.866025, 0.5, 8.74228e-08, 0.5, -0.866025, 0, 100, 0 )
+light_indirect_energy = 0.4
+light_specular = 0.0
+shadow_enabled = true
+directional_shadow_mode = 0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Root" parent="CanvasLayer" instance=ExtResource( 4 )]
+
+[node name="Player2" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -29.657, 0 )
+script = ExtResource( 6 )
+
+[connection signal="pose_updated" from="CanvasLayer/Root" to="Player" method="_update_pose_ui"]
+[connection signal="pose_updated" from="CanvasLayer/Root" to="Player2" method="_update_pose_ui"]

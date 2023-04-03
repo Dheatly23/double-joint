@@ -1,362 +1,277 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://cnau4ofvlo2tg"]
 
-[ext_resource path="res://img/bitfont.fnt" type="BitmapFont" id=1]
-[ext_resource path="res://Slider.tscn" type="PackedScene" id=2]
-[ext_resource path="res://script/UI.gd" type="Script" id=3]
+[ext_resource type="Theme" uid="uid://d0esgdgk21mnn" path="res://default_theme.tres" id="1_wmwrt"]
+[ext_resource type="Script" path="res://ui.gd" id="2_7xc4c"]
 
-[node name="Root" type="Control"]
+[node name="UI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 3 )
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_wmwrt")
+script = ExtResource("2_7xc4c")
 
 [node name="GridContainer" type="GridContainer" parent="."]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
-custom_constants/vseparation = 2
-custom_constants/hseparation = 5
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
 columns = 2
 
-[node name="LShoulderXLbl" type="Label" parent="GridContainer"]
-margin_right = 102.0
-margin_bottom = 8.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Left Shoulder X:"
+[node name="RightShoulderXLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Shoulder X: "
 
-[node name="LShoulderX" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_right = 207.0
-margin_bottom = 8.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="RightShoulderXSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="LShoulderYLbl" type="Label" parent="GridContainer"]
-margin_top = 10.0
-margin_right = 102.0
-margin_bottom = 18.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Left Shoulder Y:"
+[node name="RightShoulderYLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Shoulder Y: "
 
-[node name="LShoulderY" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 10.0
-margin_right = 207.0
-margin_bottom = 18.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="RightShoulderYSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="LShoulderZLbl" type="Label" parent="GridContainer"]
-margin_top = 20.0
-margin_right = 102.0
-margin_bottom = 28.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Left Shoulder Z:"
+[node name="RightShoulderZLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Shoulder Z: "
 
-[node name="LShoulderZ" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 20.0
-margin_right = 207.0
-margin_bottom = 28.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="RightShoulderZSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="LElbowLbl" type="Label" parent="GridContainer"]
-margin_top = 30.0
-margin_right = 102.0
-margin_bottom = 38.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Left Elbow:"
+[node name="RightElbowXLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Elbow X: "
 
-[node name="LElbow" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 30.0
-margin_right = 207.0
-margin_bottom = 38.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="RightElbowXSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -90.0
+max_value = 90.0
+step = 0.1
+alignment = 1
 
-[node name="RShoulderXLbl" type="Label" parent="GridContainer"]
-margin_top = 40.0
-margin_right = 102.0
-margin_bottom = 48.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Right Shoulder X:"
+[node name="LeftShoulderXLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Shoulder X: "
 
-[node name="RShoulderX" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 40.0
-margin_right = 207.0
-margin_bottom = 48.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="LeftShoulderXSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="RShoulderYLbl" type="Label" parent="GridContainer"]
-margin_top = 50.0
-margin_right = 102.0
-margin_bottom = 58.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Right Shoulder Y:"
+[node name="LeftShoulderYLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Shoulder Y: "
 
-[node name="RShoulderY" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 50.0
-margin_right = 207.0
-margin_bottom = 58.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="LeftShoulderYSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="RShoulderZLbl" type="Label" parent="GridContainer"]
-margin_top = 60.0
-margin_right = 102.0
-margin_bottom = 68.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Right Shoulder Z:"
+[node name="LeftShoulderZLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Shoulder Z: "
 
-[node name="RShoulderZ" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 60.0
-margin_right = 207.0
-margin_bottom = 68.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="LeftShoulderZSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="RElbowLbl" type="Label" parent="GridContainer"]
-margin_top = 70.0
-margin_right = 102.0
-margin_bottom = 78.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Right Elbow:"
+[node name="LeftElbowXLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Elbow X: "
 
-[node name="RElbow" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 70.0
-margin_right = 207.0
-margin_bottom = 78.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="LeftElbowXSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -90.0
+max_value = 90.0
+step = 0.1
+alignment = 1
 
-[node name="LLegXLbl" type="Label" parent="GridContainer"]
-margin_top = 80.0
-margin_right = 102.0
-margin_bottom = 88.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Left Leg X:"
+[node name="RightLegXLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Leg X: "
 
-[node name="LLegX" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 80.0
-margin_right = 207.0
-margin_bottom = 88.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="RightLegXSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="LLegYLbl" type="Label" parent="GridContainer"]
-margin_top = 90.0
-margin_right = 102.0
-margin_bottom = 98.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Left Leg Y:"
+[node name="RightLegYLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Leg Y: "
 
-[node name="LLegY" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 90.0
-margin_right = 207.0
-margin_bottom = 98.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="RightLegYSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="LLegZLbl" type="Label" parent="GridContainer"]
-margin_top = 100.0
-margin_right = 102.0
-margin_bottom = 108.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Left Leg Z:"
+[node name="RightLegZLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Leg Z: "
 
-[node name="LLegZ" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 100.0
-margin_right = 207.0
-margin_bottom = 108.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="RightLegZSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="LKneeLbl" type="Label" parent="GridContainer"]
-margin_top = 110.0
-margin_right = 102.0
-margin_bottom = 118.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Left Knee:"
+[node name="RightKneeXLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Knee X: "
 
-[node name="LKnee" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 110.0
-margin_right = 207.0
-margin_bottom = 118.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="RightKneeXSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -90.0
+max_value = 90.0
+step = 0.1
+alignment = 1
 
-[node name="RLegXLbl" type="Label" parent="GridContainer"]
-margin_top = 120.0
-margin_right = 102.0
-margin_bottom = 128.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Right Leg X:"
+[node name="LeftLegXLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Leg X: "
 
-[node name="RLegX" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 120.0
-margin_right = 207.0
-margin_bottom = 128.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="LeftLegXSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="RLegYLbl" type="Label" parent="GridContainer"]
-margin_top = 130.0
-margin_right = 102.0
-margin_bottom = 138.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Right Leg Y:"
+[node name="LeftLegYLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Leg Y: "
 
-[node name="RLegY" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 130.0
-margin_right = 207.0
-margin_bottom = 138.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="LeftLegYSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="RLegZLbl" type="Label" parent="GridContainer"]
-margin_top = 140.0
-margin_right = 102.0
-margin_bottom = 148.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Right Leg Z:"
+[node name="LeftLegZLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Leg Z: "
 
-[node name="RLegZ" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 140.0
-margin_right = 207.0
-margin_bottom = 148.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="LeftLegZSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -180.0
+max_value = 180.0
+step = 0.1
+alignment = 1
 
-[node name="RKneeLbl" type="Label" parent="GridContainer"]
-margin_top = 150.0
-margin_right = 102.0
-margin_bottom = 158.0
-custom_colors/font_color_shadow = Color( 0.2, 0.2, 0.2, 1 )
-custom_constants/shadow_offset_x = 1
-custom_constants/shadow_offset_y = 1
-custom_fonts/font = ExtResource( 1 )
-text = "Right Knee:"
+[node name="LeftKneeXLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Knee X: "
 
-[node name="RKnee" parent="GridContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 107.0
-margin_top = 150.0
-margin_right = 207.0
-margin_bottom = 158.0
-fraction = 0.5
-slider_color = Color( 1, 0, 0, 1 )
+[node name="LeftKneeXSpinBox" type="SpinBox" parent="GridContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -90.0
+max_value = 90.0
+step = 0.1
+alignment = 1
 
-[node name="Button" type="Button" parent="GridContainer"]
-margin_top = 160.0
-margin_right = 102.0
-margin_bottom = 174.0
-custom_fonts/font = ExtResource( 1 )
-text = "Reset"
-
-[connection signal="slider_updated" from="GridContainer/LShoulderX" to="." method="_update_slider" binds= [ "lshoulder_rx" ]]
-[connection signal="slider_updated" from="GridContainer/LShoulderY" to="." method="_update_slider" binds= [ "lshoulder_ry" ]]
-[connection signal="slider_updated" from="GridContainer/LShoulderZ" to="." method="_update_slider" binds= [ "lshoulder_rz" ]]
-[connection signal="slider_updated" from="GridContainer/LElbow" to="." method="_update_slider" binds= [ "lelbow_r" ]]
-[connection signal="slider_updated" from="GridContainer/RShoulderX" to="." method="_update_slider" binds= [ "rshoulder_rx" ]]
-[connection signal="slider_updated" from="GridContainer/RShoulderY" to="." method="_update_slider" binds= [ "rshoulder_ry" ]]
-[connection signal="slider_updated" from="GridContainer/RShoulderZ" to="." method="_update_slider" binds= [ "rshoulder_rz" ]]
-[connection signal="slider_updated" from="GridContainer/RElbow" to="." method="_update_slider" binds= [ "relbow_r" ]]
-[connection signal="slider_updated" from="GridContainer/LLegX" to="." method="_update_slider" binds= [ "lleg_rx" ]]
-[connection signal="slider_updated" from="GridContainer/LLegY" to="." method="_update_slider" binds= [ "lleg_ry" ]]
-[connection signal="slider_updated" from="GridContainer/LLegZ" to="." method="_update_slider" binds= [ "lleg_rz" ]]
-[connection signal="slider_updated" from="GridContainer/LKnee" to="." method="_update_slider" binds= [ "lknee_r" ]]
-[connection signal="slider_updated" from="GridContainer/RLegX" to="." method="_update_slider" binds= [ "rleg_rx" ]]
-[connection signal="slider_updated" from="GridContainer/RLegY" to="." method="_update_slider" binds= [ "rleg_ry" ]]
-[connection signal="slider_updated" from="GridContainer/RLegZ" to="." method="_update_slider" binds= [ "rleg_rz" ]]
-[connection signal="slider_updated" from="GridContainer/RKnee" to="." method="_update_slider" binds= [ "rknee_r" ]]
-[connection signal="pressed" from="GridContainer/Button" to="." method="_reset_values"]
+[connection signal="value_changed" from="GridContainer/RightShoulderXSpinBox" to="." method="__changed" binds= ["rshoulderx"]]
+[connection signal="value_changed" from="GridContainer/RightShoulderYSpinBox" to="." method="__changed" binds= ["rshouldery"]]
+[connection signal="value_changed" from="GridContainer/RightShoulderZSpinBox" to="." method="__changed" binds= ["rshoulderz"]]
+[connection signal="value_changed" from="GridContainer/RightElbowXSpinBox" to="." method="__changed" binds= ["relbowx"]]
+[connection signal="value_changed" from="GridContainer/LeftShoulderXSpinBox" to="." method="__changed" binds= ["lshoulderx"]]
+[connection signal="value_changed" from="GridContainer/LeftShoulderYSpinBox" to="." method="__changed" binds= ["lshouldery"]]
+[connection signal="value_changed" from="GridContainer/LeftShoulderZSpinBox" to="." method="__changed" binds= ["lshoulderz"]]
+[connection signal="value_changed" from="GridContainer/LeftElbowXSpinBox" to="." method="__changed" binds= ["lelbowx"]]
+[connection signal="value_changed" from="GridContainer/RightLegXSpinBox" to="." method="__changed" binds= ["rlegx"]]
+[connection signal="value_changed" from="GridContainer/RightLegYSpinBox" to="." method="__changed" binds= ["rlegy"]]
+[connection signal="value_changed" from="GridContainer/RightLegZSpinBox" to="." method="__changed" binds= ["rlegz"]]
+[connection signal="value_changed" from="GridContainer/RightKneeXSpinBox" to="." method="__changed" binds= ["rkneex"]]
+[connection signal="value_changed" from="GridContainer/LeftLegXSpinBox" to="." method="__changed" binds= ["llegx"]]
+[connection signal="value_changed" from="GridContainer/LeftLegYSpinBox" to="." method="__changed" binds= ["llegy"]]
+[connection signal="value_changed" from="GridContainer/LeftLegZSpinBox" to="." method="__changed" binds= ["llegz"]]
+[connection signal="value_changed" from="GridContainer/LeftKneeXSpinBox" to="." method="__changed" binds= ["lkneex"]]

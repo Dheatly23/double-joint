@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://d0esgdgk21mnn"]
+
+[sub_resource type="SystemFont" id="SystemFont_pv64g"]
+font_names = PackedStringArray("Monospace")
+
+[resource]
+default_font = SubResource("SystemFont_pv64g")
+default_font_size = 9

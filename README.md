@@ -22,6 +22,16 @@ So perhaps with it, we can put this algorithm into people's hand.
 
 See the notebook or [SPEC.md](spec/SPEC.md)
 
+## Screenshots
+
+### Godot
+
+![Screenshot 1](screenshot/screenshot_1.png)
+
+![Screenshot 2](screenshot/screenshot_2.png)
+
+![Screenshot 3](screenshot/screenshot_3.png)
+
 ## License
 
 Unless otherwise noted, all code is licensed with Apache-2.0. You may

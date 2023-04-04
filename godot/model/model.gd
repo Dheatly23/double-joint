@@ -377,7 +377,7 @@ func rerender():
 		t_ * Vector3(1, -1, 1),
 		t_ * Vector3(1, 1, -1),
 		t_ * Vector3(1, 1, 1),
-		Vector2(32, 56) / 64,
+		Vector2(40, 24) / 64,
 		Vector3(4, 4, 4) / 64,
 		0b111100,
 	)

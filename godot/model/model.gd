@@ -16,6 +16,14 @@ const MASK_BACK  := 0b100000
 	set(v):
 		material = v
 		queue_rerender = true
+@export var material_layer2: Material:
+	set(v):
+		material_layer2 = v
+		queue_rerender = true
+@export_range(0, 1, 0.01, "or_greater") var layer2_offset: float = 0.1:
+	set(v):
+		layer2_offset = v
+		queue_rerender = true
 
 var queue_rerender := true
 
@@ -126,24 +134,25 @@ func _draw_double_joint(
 	uv: Vector2,
 	dim: Vector3,
 	right_handed: bool,
+	scale: float = 1,
 ):
 	t = t * Transform3D(Basis(Vector3(0, -1, 0), r.x + r.z), Vector3.ZERO)
-	var p010 := t * Vector3(-1, SQRT_2, -1)
-	var p011 := t * Vector3(-1, SQRT_2, 1)
-	var p110 := t * Vector3(1, SQRT_2, -1)
-	var p111 := t * Vector3(1, SQRT_2, 1)
+	var p010 := t * Vector3(-scale, SQRT_2 * scale, -scale)
+	var p011 := t * Vector3(-scale, SQRT_2 * scale, scale)
+	var p110 := t * Vector3(scale, SQRT_2 * scale, -scale)
+	var p111 := t * Vector3(scale, SQRT_2 * scale, scale)
 	_draw_quad(s, p011, p111, p010, p110, uv + Vector2(dim.z, dim.z), Vector2(dim.x, -dim.z))
 
 	var sx := sin(r.x)
 	var cx := cos(r.x)
-	var ty2 := tan(r.y * 0.5)
+	var ty2 := tan(r.y * 0.5) * scale
 	if not right_handed:
 		ty2 = -ty2
 
-	var p000 := t * Vector3(-1, (-sx - cx) * ty2, -1)
-	var p001 := t * Vector3(-1, (-sx + cx) * ty2, 1)
-	var p100 := t * Vector3(1, (sx - cx) * ty2, -1)
-	var p101 := t * Vector3(1, (sx + cx) * ty2, 1)
+	var p000 := t * Vector3(-scale, (-sx - cx) * ty2, -scale)
+	var p001 := t * Vector3(-scale, (-sx + cx) * ty2, scale)
+	var p100 := t * Vector3(scale, (sx - cx) * ty2, -scale)
+	var p101 := t * Vector3(scale, (sx + cx) * ty2, scale)
 
 	var dim2 := Vector3(dim.x, dim.y * 0.5, dim.z)
 	_draw_cube(
@@ -162,10 +171,10 @@ func _draw_double_joint(
 	)
 
 	t = t * Transform3D(Basis(Vector3(-cx, 0, sx) if right_handed else Vector3(cx, 0, -sx), r.y), Vector3.ZERO)
-	p010 = t * Vector3(-1, -SQRT_2, -1)
-	p011 = t * Vector3(-1, -SQRT_2, 1)
-	p110 = t * Vector3(1, -SQRT_2, -1)
-	p111 = t * Vector3(1, -SQRT_2, 1)
+	p010 = t * Vector3(-scale, -SQRT_2, -scale)
+	p011 = t * Vector3(-scale, -SQRT_2, scale)
+	p110 = t * Vector3(scale, -SQRT_2, -scale)
+	p111 = t * Vector3(scale, -SQRT_2, scale)
 	_draw_cube(
 		s,
 		p010,
@@ -187,19 +196,20 @@ func _draw_single_joint(
 	r: float,
 	uv: Vector2,
 	dim: Vector3,
+	scale: float = 1,
 ):
-	var p010 := t * Vector3(-1, 1, -1)
-	var p011 := t * Vector3(-1, 1, 1)
-	var p110 := t * Vector3(1, 1, -1)
-	var p111 := t * Vector3(1, 1, 1)
+	var p010 := t * Vector3(-scale, 1, -scale)
+	var p011 := t * Vector3(-scale, 1, scale)
+	var p110 := t * Vector3(scale, 1, -scale)
+	var p111 := t * Vector3(scale, 1, scale)
 
 	r = clampf(r, -PI_2, PI_2)
-	var tz2 := tan(r * 0.5)
+	var tz2 := tan(r * 0.5) * scale
 
-	var p000 := t * Vector3(-1, tz2, -1)
-	var p001 := t * Vector3(-1, -tz2, 1)
-	var p100 := t * Vector3(1, tz2, -1)
-	var p101 := t * Vector3(1, -tz2, 1)
+	var p000 := t * Vector3(-scale, tz2, -scale)
+	var p001 := t * Vector3(-scale, -tz2, scale)
+	var p100 := t * Vector3(scale, tz2, -scale)
+	var p101 := t * Vector3(scale, -tz2, scale)
 
 	var dim2 := Vector3(dim.x, dim.y * 0.5, dim.z)
 	_draw_cube(
@@ -218,10 +228,10 @@ func _draw_single_joint(
 	)
 
 	t = t * Transform3D(Basis(Vector3(1, 0, 0), r), Vector3.ZERO)
-	p010 = t * Vector3(-1, -1, -1)
-	p011 = t * Vector3(-1, -1, 1)
-	p110 = t * Vector3(1, -1, -1)
-	p111 = t * Vector3(1, -1, 1)
+	p010 = t * Vector3(-scale, -1, -scale)
+	p011 = t * Vector3(-scale, -1, scale)
+	p110 = t * Vector3(scale, -1, -scale)
+	p111 = t * Vector3(scale, -1, scale)
 	_draw_cube(
 		s,
 		p010,
@@ -255,6 +265,14 @@ func rerender():
 	s[Mesh.ARRAY_TEX_UV] = []
 	s[Mesh.ARRAY_INDEX] = []
 
+	var draw_l2 := material_layer2 != null
+	var s2 := []
+	s2.resize(Mesh.ARRAY_MAX)
+	s2[Mesh.ARRAY_VERTEX] = []
+	s2[Mesh.ARRAY_NORMAL] = []
+	s2[Mesh.ARRAY_TEX_UV] = []
+	s2[Mesh.ARRAY_INDEX] = []
+
 	# Draw Head
 	var ix := skeleton.find_bone("head")
 	var t := skeleton.get_bone_global_pose(ix)
@@ -281,21 +299,51 @@ func rerender():
 		Vector2(0, 0),
 		Vector3(8, 8, 8) / 64,
 	)
+	if draw_l2:
+		_draw_cube(
+			s2,
+			t * Vector3(-1 - layer2_offset / 4, -layer2_offset / 8, -1 - layer2_offset / 4),
+			t * Vector3(-1 - layer2_offset / 4, -layer2_offset / 8, 1 + layer2_offset / 4),
+			t * Vector3(-1 - layer2_offset / 4, 1 + layer2_offset / 8, -1 - layer2_offset / 4),
+			t * Vector3(-1 - layer2_offset / 4, 1 + layer2_offset / 8, 1 + layer2_offset / 4),
+			t * Vector3(1 + layer2_offset / 4, -layer2_offset / 8, -1 - layer2_offset / 4),
+			t * Vector3(1 + layer2_offset / 4, -layer2_offset / 8, 1 + layer2_offset / 4),
+			t * Vector3(1 + layer2_offset / 4, 1 + layer2_offset / 8, -1 - layer2_offset / 4),
+			t * Vector3(1 + layer2_offset / 4, 1 + layer2_offset / 8, 1 + layer2_offset / 4),
+			Vector2(32, 0) / 64,
+			Vector3(8, 8, 8) / 64,
+		)
 
 	# Draw Body
+	ix = skeleton.find_bone("body")
+	t = skeleton.get_bone_global_pose(ix)
 	_draw_cube(
 		s,
-		Vector3(-4, -10, -2),
-		Vector3(-4, -10, 2),
-		Vector3(-4, 2, -2),
-		Vector3(-4, 2, 2),
-		Vector3(4, -10, -2),
-		Vector3(4, -10, 2),
-		Vector3(4, 2, -2),
-		Vector3(4, 2, 2),
+		t * Vector3(-4, -10, -2),
+		t * Vector3(-4, -10, 2),
+		t * Vector3(-4, 2, -2),
+		t * Vector3(-4, 2, 2),
+		t * Vector3(4, -10, -2),
+		t * Vector3(4, -10, 2),
+		t * Vector3(4, 2, -2),
+		t * Vector3(4, 2, 2),
 		Vector2(16, 16) / 64,
 		Vector3(8, 12, 4) / 64,
 	)
+	if draw_l2:
+		_draw_cube(
+			s,
+			t * Vector3(-4 - layer2_offset, -10 - layer2_offset, -2 - layer2_offset),
+			t * Vector3(-4 - layer2_offset, -10 - layer2_offset, 2 + layer2_offset),
+			t * Vector3(-4 - layer2_offset, 2 + layer2_offset, -2 - layer2_offset),
+			t * Vector3(-4 - layer2_offset, 2 + layer2_offset, 2 + layer2_offset),
+			t * Vector3(4 + layer2_offset, -10 - layer2_offset, -2 - layer2_offset),
+			t * Vector3(4 + layer2_offset, -10 - layer2_offset, 2 + layer2_offset),
+			t * Vector3(4 + layer2_offset, 2 + layer2_offset, -2 - layer2_offset),
+			t * Vector3(4 + layer2_offset, 2 + layer2_offset, 2 + layer2_offset),
+			Vector2(16, 32) / 64,
+			Vector3(8, 12, 4) / 64,
+		)
 
 	# Draw Left Arm
 	ix = skeleton.find_bone("left_arm")
@@ -305,6 +353,8 @@ func rerender():
 	t.basis = skeleton.get_bone_global_rest(ix).basis
 	var t_ := Transform3D(t.basis.scaled(Vector3(2, 2, 2)), t.origin)
 	_draw_double_joint(s, t_, r, Vector2(32, 48) / 64, Vector3(4, 4, 4) / 64, false)
+	if draw_l2:
+		_draw_double_joint(s2, t_, r, Vector2(48, 48) / 64, Vector3(4, 4, 4) / 64, false, 1 + layer2_offset / 2)
 	t.basis = Basis(Vector3(1, 0, 0), r.z) * Basis(Vector3(0, 1, 0), r.y) * Basis(Vector3(1, 0, 0), r.x) * t.basis
 
 	# Draw Left Elbow
@@ -313,6 +363,8 @@ func rerender():
 	var r_ := clampf(t_.basis.orthonormalized().get_euler(EULER_ORDER_XYZ).x, -PI_2, PI_2)
 	t_ = Transform3D(t.basis.scaled(Vector3(2, 2, 2)), t * t_.origin)
 	_draw_single_joint(s, t_, r_, Vector2(32, 52) / 64, Vector3(4, 4, 4) / 64)
+	if draw_l2:
+		_draw_single_joint(s2, t_, r_, Vector2(48, 52) / 64, Vector3(4, 4, 4) / 64, 1 + layer2_offset / 2)
 	t = Transform3D(t.basis * Basis(Vector3(1, 0, 0), r_), t_.origin)
 
 	# Draw Left Hand
@@ -326,12 +378,12 @@ func rerender():
 	p101 = t_ * Vector3(1, -1, 1)
 	_draw_cube(
 		s,
-		t_ * Vector3(-1, -1, -1),
-		t_ * Vector3(-1, -1, 1),
+		p000,
+		p001,
 		t_ * Vector3(-1, 1, -1),
 		t_ * Vector3(-1, 1, 1),
-		t_ * Vector3(1, -1, -1),
-		t_ * Vector3(1, -1, 1),
+		p100,
+		p101,
 		t_ * Vector3(1, 1, -1),
 		t_ * Vector3(1, 1, 1),
 		Vector2(32, 56) / 64,
@@ -339,6 +391,26 @@ func rerender():
 		0b111100,
 	)
 	_draw_quad(s, p000, p100, p001, p101, Vector2(40, 48) / 64, Vector2(4, 4) / 64)
+	if draw_l2:
+		p000 = t_ * Vector3(-1 - layer2_offset / 2, -1 - layer2_offset / 2, -1 - layer2_offset / 2)
+		p001 = t_ * Vector3(-1 - layer2_offset / 2, -1 - layer2_offset / 2, 1 + layer2_offset / 2)
+		p100 = t_ * Vector3(1 + layer2_offset / 2, -1 - layer2_offset / 2, -1 - layer2_offset / 2)
+		p101 = t_ * Vector3(1 + layer2_offset / 2, -1 - layer2_offset / 2, 1 + layer2_offset / 2)
+		_draw_cube(
+			s2,
+			p000,
+			p001,
+			t_ * Vector3(-1 - layer2_offset / 2, 1, -1 - layer2_offset / 2),
+			t_ * Vector3(-1 - layer2_offset / 2, 1, 1 + layer2_offset / 2),
+			p100,
+			p101,
+			t_ * Vector3(1 + layer2_offset / 2, 1, -1 - layer2_offset / 2),
+			t_ * Vector3(1 + layer2_offset / 2, 1, 1 + layer2_offset / 2),
+			Vector2(48, 56) / 64,
+			Vector3(4, 4, 4) / 64,
+			0b111100,
+		)
+		_draw_quad(s2, p000, p100, p001, p101, Vector2(56, 48) / 64, Vector2(4, 4) / 64)
 
 	# Draw Right Arm
 	ix = skeleton.find_bone("right_arm")
@@ -348,6 +420,8 @@ func rerender():
 	t.basis = skeleton.get_bone_global_rest(ix).basis
 	t_ = Transform3D(t.basis.scaled(Vector3(2, 2, 2)), t.origin)
 	_draw_double_joint(s, t_, r, Vector2(40, 16) / 64, Vector3(4, 4, 4) / 64, true)
+	if draw_l2:
+		_draw_double_joint(s2, t_, r, Vector2(40, 32) / 64, Vector3(4, 4, 4) / 64, true, 1 + layer2_offset / 2)
 	t.basis = Basis(Vector3(1, 0, 0), -r.z) * Basis(Vector3(0, 1, 0), r.y) * Basis(Vector3(1, 0, 0), -r.x) * t.basis
 
 	# Draw Right Elbow
@@ -356,6 +430,8 @@ func rerender():
 	r_ = clampf(t_.basis.orthonormalized().get_euler(EULER_ORDER_XYZ).x, -PI_2, PI_2)
 	t_ = Transform3D(t.basis.scaled(Vector3(2, 2, 2)), t * t_.origin)
 	_draw_single_joint(s, t_, r_, Vector2(40, 20) / 64, Vector3(4, 4, 4) / 64)
+	if draw_l2:
+		_draw_single_joint(s2, t_, r_, Vector2(40, 36) / 64, Vector3(4, 4, 4) / 64, 1 + layer2_offset / 2)
 	t = Transform3D(t.basis * Basis(Vector3(1, 0, 0), r_), t_.origin)
 
 	# Draw Right Hand
@@ -369,12 +445,12 @@ func rerender():
 	p101 = t_ * Vector3(1, -1, 1)
 	_draw_cube(
 		s,
-		t_ * Vector3(-1, -1, -1),
-		t_ * Vector3(-1, -1, 1),
+		p000,
+		p001,
 		t_ * Vector3(-1, 1, -1),
 		t_ * Vector3(-1, 1, 1),
-		t_ * Vector3(1, -1, -1),
-		t_ * Vector3(1, -1, 1),
+		p100,
+		p101,
 		t_ * Vector3(1, 1, -1),
 		t_ * Vector3(1, 1, 1),
 		Vector2(40, 24) / 64,
@@ -382,6 +458,26 @@ func rerender():
 		0b111100,
 	)
 	_draw_quad(s, p000, p100, p001, p101, Vector2(48, 16) / 64, Vector2(4, 4) / 64)
+	if draw_l2:
+		p000 = t_ * Vector3(-1 - layer2_offset / 2, -1 - layer2_offset / 2, -1 - layer2_offset / 2)
+		p001 = t_ * Vector3(-1 - layer2_offset / 2, -1 - layer2_offset / 2, 1 + layer2_offset / 2)
+		p100 = t_ * Vector3(1 + layer2_offset / 2, -1 - layer2_offset / 2, -1 - layer2_offset / 2)
+		p101 = t_ * Vector3(1 + layer2_offset / 2, -1 - layer2_offset / 2, 1 + layer2_offset / 2)
+		_draw_cube(
+			s2,
+			p000,
+			p001,
+			t_ * Vector3(-1 - layer2_offset / 2, 1, -1 - layer2_offset / 2),
+			t_ * Vector3(-1 - layer2_offset / 2, 1, 1 + layer2_offset / 2),
+			p100,
+			p101,
+			t_ * Vector3(1 + layer2_offset / 2, 1, -1 - layer2_offset / 2),
+			t_ * Vector3(1 + layer2_offset / 2, 1, 1 + layer2_offset / 2),
+			Vector2(40, 40) / 64,
+			Vector3(4, 4, 4) / 64,
+			0b111100,
+		)
+		_draw_quad(s2, p000, p100, p001, p101, Vector2(48, 32) / 64, Vector2(4, 4) / 64)
 
 	# Draw Left Leg
 	ix = skeleton.find_bone("left_leg")
@@ -391,6 +487,8 @@ func rerender():
 	t.basis = skeleton.get_bone_global_rest(ix).basis
 	t_ = Transform3D(t.basis.scaled(Vector3(2, 2, 2)), t.origin)
 	_draw_double_joint(s, t_, r, Vector2(16, 48) / 64, Vector3(4, 4, 4) / 64, true)
+	if draw_l2:
+		_draw_double_joint(s2, t_, r, Vector2(0, 48) / 64, Vector3(4, 4, 4) / 64, true, 1 + layer2_offset / 2)
 	t.basis = Basis(Vector3(0, 1, 0), -r.z) * Basis(Vector3(1, 0, 0), -r.y) * Basis(Vector3(0, 1, 0), -r.x) * t.basis
 
 	# Draw Left Knee
@@ -399,6 +497,8 @@ func rerender():
 	r_ = clampf(t_.basis.orthonormalized().get_euler(EULER_ORDER_XYZ).x, -PI_2, PI_2)
 	t_ = Transform3D(t.basis.scaled(Vector3(2, 2, 2)), t * t_.origin)
 	_draw_single_joint(s, t_, r_, Vector2(16, 52) / 64, Vector3(4, 4, 4) / 64)
+	if draw_l2:
+		_draw_single_joint(s2, t_, r_, Vector2(0, 52) / 64, Vector3(4, 4, 4) / 64, 1 + layer2_offset / 2)
 	t = Transform3D(t.basis * Basis(Vector3(1, 0, 0), r_), t_.origin)
 
 	# Draw Left Foot
@@ -412,12 +512,12 @@ func rerender():
 	p101 = t_ * Vector3(1, -1, 1)
 	_draw_cube(
 		s,
-		t_ * Vector3(-1, -1, -1),
-		t_ * Vector3(-1, -1, 1),
+		p000,
+		p001,
 		t_ * Vector3(-1, 1, -1),
 		t_ * Vector3(-1, 1, 1),
-		t_ * Vector3(1, -1, -1),
-		t_ * Vector3(1, -1, 1),
+		p100,
+		p101,
 		t_ * Vector3(1, 1, -1),
 		t_ * Vector3(1, 1, 1),
 		Vector2(16, 56) / 64,
@@ -425,6 +525,26 @@ func rerender():
 		0b111100,
 	)
 	_draw_quad(s, p000, p100, p001, p101, Vector2(24, 48) / 64, Vector2(4, 4) / 64)
+	if draw_l2:
+		p000 = t_ * Vector3(-1 - layer2_offset / 2, -1 - layer2_offset / 2, -1 - layer2_offset / 2)
+		p001 = t_ * Vector3(-1 - layer2_offset / 2, -1 - layer2_offset / 2, 1 + layer2_offset / 2)
+		p100 = t_ * Vector3(1 + layer2_offset / 2, -1 - layer2_offset / 2, -1 - layer2_offset / 2)
+		p101 = t_ * Vector3(1 + layer2_offset / 2, -1 - layer2_offset / 2, 1 + layer2_offset / 2)
+		_draw_cube(
+			s2,
+			p000,
+			p001,
+			t_ * Vector3(-1 - layer2_offset / 2, 1, -1 - layer2_offset / 2),
+			t_ * Vector3(-1 - layer2_offset / 2, 1, 1 + layer2_offset / 2),
+			p100,
+			p101,
+			t_ * Vector3(1 + layer2_offset / 2, 1, -1 - layer2_offset / 2),
+			t_ * Vector3(1 + layer2_offset / 2, 1, 1 + layer2_offset / 2),
+			Vector2(0, 56) / 64,
+			Vector3(4, 4, 4) / 64,
+			0b111100,
+		)
+		_draw_quad(s2, p000, p100, p001, p101, Vector2(8, 48) / 64, Vector2(4, 4) / 64)
 
 	# Draw Right Leg
 	ix = skeleton.find_bone("right_leg")
@@ -434,6 +554,8 @@ func rerender():
 	t.basis = skeleton.get_bone_global_rest(ix).basis
 	t_ = Transform3D(t.basis.scaled(Vector3(2, 2, 2)), t.origin)
 	_draw_double_joint(s, t_, r, Vector2(0, 16) / 64, Vector3(4, 4, 4) / 64, true)
+	if draw_l2:
+		_draw_double_joint(s2, t_, r, Vector2(0, 32) / 64, Vector3(4, 4, 4) / 64, true, 1 + layer2_offset / 2)
 	t.basis = Basis(Vector3(0, 1, 0), -r.z) * Basis(Vector3(1, 0, 0), -r.y) * Basis(Vector3(0, 1, 0), -r.x) * t.basis
 
 	# Draw Right Knee
@@ -442,6 +564,8 @@ func rerender():
 	r_ = clampf(t_.basis.orthonormalized().get_euler(EULER_ORDER_XYZ).x, -PI_2, PI_2)
 	t_ = Transform3D(t.basis.scaled(Vector3(2, 2, 2)), t * t_.origin)
 	_draw_single_joint(s, t_, r_, Vector2(0, 20) / 64, Vector3(4, 4, 4) / 64)
+	if draw_l2:
+		_draw_single_joint(s2, t_, r_, Vector2(0, 36) / 64, Vector3(4, 4, 4) / 64, 1 + layer2_offset / 2)
 	t = Transform3D(t.basis * Basis(Vector3(1, 0, 0), r_), t_.origin)
 
 	# Draw Right Foot
@@ -455,12 +579,12 @@ func rerender():
 	p101 = t_ * Vector3(1, -1, 1)
 	_draw_cube(
 		s,
-		t_ * Vector3(-1, -1, -1),
-		t_ * Vector3(-1, -1, 1),
+		p000,
+		p001,
 		t_ * Vector3(-1, 1, -1),
 		t_ * Vector3(-1, 1, 1),
-		t_ * Vector3(1, -1, -1),
-		t_ * Vector3(1, -1, 1),
+		p100,
+		p101,
 		t_ * Vector3(1, 1, -1),
 		t_ * Vector3(1, 1, 1),
 		Vector2(0, 24) / 64,
@@ -468,6 +592,26 @@ func rerender():
 		0b111100,
 	)
 	_draw_quad(s, p000, p100, p001, p101, Vector2(8, 16) / 64, Vector2(4, 4) / 64)
+	if draw_l2:
+		p000 = t_ * Vector3(-1 - layer2_offset / 2, -1 - layer2_offset / 2, -1 - layer2_offset / 2)
+		p001 = t_ * Vector3(-1 - layer2_offset / 2, -1 - layer2_offset / 2, 1 + layer2_offset / 2)
+		p100 = t_ * Vector3(1 + layer2_offset / 2, -1 - layer2_offset / 2, -1 - layer2_offset / 2)
+		p101 = t_ * Vector3(1 + layer2_offset / 2, -1 - layer2_offset / 2, 1 + layer2_offset / 2)
+		_draw_cube(
+			s2,
+			p000,
+			p001,
+			t_ * Vector3(-1 - layer2_offset / 2, 1, -1 - layer2_offset / 2),
+			t_ * Vector3(-1 - layer2_offset / 2, 1, 1 + layer2_offset / 2),
+			p100,
+			p101,
+			t_ * Vector3(1 + layer2_offset / 2, 1, -1 - layer2_offset / 2),
+			t_ * Vector3(1 + layer2_offset / 2, 1, 1 + layer2_offset / 2),
+			Vector2(0, 40) / 64,
+			Vector3(4, 4, 4) / 64,
+			0b111100,
+		)
+		_draw_quad(s2, p000, p100, p001, p101, Vector2(8, 32) / 64, Vector2(4, 4) / 64)
 
 	s[Mesh.ARRAY_VERTEX] = PackedVector3Array(s[Mesh.ARRAY_VERTEX])
 	s[Mesh.ARRAY_NORMAL] = PackedVector3Array(s[Mesh.ARRAY_NORMAL])
@@ -475,6 +619,14 @@ func rerender():
 	s[Mesh.ARRAY_INDEX] = PackedInt32Array(s[Mesh.ARRAY_INDEX])
 	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, s)
 	m.surface_set_material(0, material)
+
+	if draw_l2:
+		s2[Mesh.ARRAY_VERTEX] = PackedVector3Array(s2[Mesh.ARRAY_VERTEX])
+		s2[Mesh.ARRAY_NORMAL] = PackedVector3Array(s2[Mesh.ARRAY_NORMAL])
+		s2[Mesh.ARRAY_TEX_UV] = PackedVector2Array(s2[Mesh.ARRAY_TEX_UV])
+		s2[Mesh.ARRAY_INDEX] = PackedInt32Array(s2[Mesh.ARRAY_INDEX])
+		m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, s2)
+		m.surface_set_material(1, material_layer2)
 
 func _enter_tree():
 	var c := Callable(self, "_update_pose")

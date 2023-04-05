@@ -32,6 +32,8 @@ See the notebook or [SPEC.md](spec/SPEC.md)
 
 ![Screenshot 3](screenshot/screenshot_3.png)
 
+![Screenshot 4](screenshot/screenshot_4.png)
+
 ## License
 
 Unless otherwise noted, all code is licensed with Apache-2.0. You may

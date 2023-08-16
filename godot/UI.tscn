@@ -13,18 +13,21 @@ grow_vertical = 2
 theme = ExtResource("1_wmwrt")
 script = ExtResource("2_7xc4c")
 
-[node name="GridContainer" type="GridContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
 columns = 2
 
-[node name="RightShoulderXLabel" type="Label" parent="GridContainer"]
+[node name="RightShoulderXLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Shoulder X: "
 
-[node name="RightShoulderXSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="RightShoulderXSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -34,12 +37,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="RightShoulderYLabel" type="Label" parent="GridContainer"]
+[node name="RightShoulderYLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Shoulder Y: "
 
-[node name="RightShoulderYSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="RightShoulderYSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -49,12 +52,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="RightShoulderZLabel" type="Label" parent="GridContainer"]
+[node name="RightShoulderZLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Shoulder Z: "
 
-[node name="RightShoulderZSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="RightShoulderZSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -64,12 +67,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="RightElbowXLabel" type="Label" parent="GridContainer"]
+[node name="RightElbowXLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Elbow X: "
 
-[node name="RightElbowXSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="RightElbowXSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -79,12 +82,12 @@ max_value = 90.0
 step = 0.1
 alignment = 1
 
-[node name="LeftShoulderXLabel" type="Label" parent="GridContainer"]
+[node name="LeftShoulderXLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Shoulder X: "
 
-[node name="LeftShoulderXSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="LeftShoulderXSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -94,12 +97,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="LeftShoulderYLabel" type="Label" parent="GridContainer"]
+[node name="LeftShoulderYLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Shoulder Y: "
 
-[node name="LeftShoulderYSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="LeftShoulderYSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -109,12 +112,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="LeftShoulderZLabel" type="Label" parent="GridContainer"]
+[node name="LeftShoulderZLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Shoulder Z: "
 
-[node name="LeftShoulderZSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="LeftShoulderZSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -124,12 +127,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="LeftElbowXLabel" type="Label" parent="GridContainer"]
+[node name="LeftElbowXLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Elbow X: "
 
-[node name="LeftElbowXSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="LeftElbowXSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -139,12 +142,12 @@ max_value = 90.0
 step = 0.1
 alignment = 1
 
-[node name="RightLegXLabel" type="Label" parent="GridContainer"]
+[node name="RightLegXLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Leg X: "
 
-[node name="RightLegXSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="RightLegXSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -154,12 +157,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="RightLegYLabel" type="Label" parent="GridContainer"]
+[node name="RightLegYLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Leg Y: "
 
-[node name="RightLegYSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="RightLegYSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -169,12 +172,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="RightLegZLabel" type="Label" parent="GridContainer"]
+[node name="RightLegZLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Leg Z: "
 
-[node name="RightLegZSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="RightLegZSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -184,12 +187,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="RightKneeXLabel" type="Label" parent="GridContainer"]
+[node name="RightKneeXLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Knee X: "
 
-[node name="RightKneeXSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="RightKneeXSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -199,12 +202,12 @@ max_value = 90.0
 step = 0.1
 alignment = 1
 
-[node name="LeftLegXLabel" type="Label" parent="GridContainer"]
+[node name="LeftLegXLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Leg X: "
 
-[node name="LeftLegXSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="LeftLegXSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -214,12 +217,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="LeftLegYLabel" type="Label" parent="GridContainer"]
+[node name="LeftLegYLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Leg Y: "
 
-[node name="LeftLegYSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="LeftLegYSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -229,12 +232,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="LeftLegZLabel" type="Label" parent="GridContainer"]
+[node name="LeftLegZLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Leg Z: "
 
-[node name="LeftLegZSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="LeftLegZSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -244,12 +247,12 @@ max_value = 180.0
 step = 0.1
 alignment = 1
 
-[node name="LeftKneeXLabel" type="Label" parent="GridContainer"]
+[node name="LeftKneeXLabel" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Knee X: "
 
-[node name="LeftKneeXSpinBox" type="SpinBox" parent="GridContainer"]
+[node name="LeftKneeXSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -259,19 +262,24 @@ max_value = 90.0
 step = 0.1
 alignment = 1
 
-[connection signal="value_changed" from="GridContainer/RightShoulderXSpinBox" to="." method="__changed" binds= ["rshoulderx"]]
-[connection signal="value_changed" from="GridContainer/RightShoulderYSpinBox" to="." method="__changed" binds= ["rshouldery"]]
-[connection signal="value_changed" from="GridContainer/RightShoulderZSpinBox" to="." method="__changed" binds= ["rshoulderz"]]
-[connection signal="value_changed" from="GridContainer/RightElbowXSpinBox" to="." method="__changed" binds= ["relbowx"]]
-[connection signal="value_changed" from="GridContainer/LeftShoulderXSpinBox" to="." method="__changed" binds= ["lshoulderx"]]
-[connection signal="value_changed" from="GridContainer/LeftShoulderYSpinBox" to="." method="__changed" binds= ["lshouldery"]]
-[connection signal="value_changed" from="GridContainer/LeftShoulderZSpinBox" to="." method="__changed" binds= ["lshoulderz"]]
-[connection signal="value_changed" from="GridContainer/LeftElbowXSpinBox" to="." method="__changed" binds= ["lelbowx"]]
-[connection signal="value_changed" from="GridContainer/RightLegXSpinBox" to="." method="__changed" binds= ["rlegx"]]
-[connection signal="value_changed" from="GridContainer/RightLegYSpinBox" to="." method="__changed" binds= ["rlegy"]]
-[connection signal="value_changed" from="GridContainer/RightLegZSpinBox" to="." method="__changed" binds= ["rlegz"]]
-[connection signal="value_changed" from="GridContainer/RightKneeXSpinBox" to="." method="__changed" binds= ["rkneex"]]
-[connection signal="value_changed" from="GridContainer/LeftLegXSpinBox" to="." method="__changed" binds= ["llegx"]]
-[connection signal="value_changed" from="GridContainer/LeftLegYSpinBox" to="." method="__changed" binds= ["llegy"]]
-[connection signal="value_changed" from="GridContainer/LeftLegZSpinBox" to="." method="__changed" binds= ["llegz"]]
-[connection signal="value_changed" from="GridContainer/LeftKneeXSpinBox" to="." method="__changed" binds= ["lkneex"]]
+[node name="ResetButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Reset"
+
+[connection signal="value_changed" from="VBoxContainer/GridContainer/RightShoulderXSpinBox" to="." method="__changed" binds= ["rshoulderx"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/RightShoulderYSpinBox" to="." method="__changed" binds= ["rshouldery"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/RightShoulderZSpinBox" to="." method="__changed" binds= ["rshoulderz"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/RightElbowXSpinBox" to="." method="__changed" binds= ["relbowx"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/LeftShoulderXSpinBox" to="." method="__changed" binds= ["lshoulderx"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/LeftShoulderYSpinBox" to="." method="__changed" binds= ["lshouldery"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/LeftShoulderZSpinBox" to="." method="__changed" binds= ["lshoulderz"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/LeftElbowXSpinBox" to="." method="__changed" binds= ["lelbowx"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/RightLegXSpinBox" to="." method="__changed" binds= ["rlegx"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/RightLegYSpinBox" to="." method="__changed" binds= ["rlegy"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/RightLegZSpinBox" to="." method="__changed" binds= ["rlegz"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/RightKneeXSpinBox" to="." method="__changed" binds= ["rkneex"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/LeftLegXSpinBox" to="." method="__changed" binds= ["llegx"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/LeftLegYSpinBox" to="." method="__changed" binds= ["llegy"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/LeftLegZSpinBox" to="." method="__changed" binds= ["llegz"]]
+[connection signal="value_changed" from="VBoxContainer/GridContainer/LeftKneeXSpinBox" to="." method="__changed" binds= ["lkneex"]]
+[connection signal="pressed" from="VBoxContainer/ResetButton" to="." method="__reset_all"]

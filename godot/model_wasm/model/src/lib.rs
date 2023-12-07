@@ -884,7 +884,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     r = euler_angle_xyx(&basis_);
     r.y = -r.y.clamp(-FRAC_PI_2, FRAC_PI_2);
     basis = Mat3::from_quat(
-        Quat::from_rotation_x(r.z) * Quat::from_rotation_y(r.y) * Quat::from_rotation_x(r.x),
+        Quat::from_rotation_x(-r.z) * Quat::from_rotation_y(r.y) * Quat::from_rotation_x(-r.x),
     );
     (basis.x_axis, basis.y_axis) = (-basis.y_axis, basis.x_axis);
     basis_ = mat3(vec3(0., -2., 0.), vec3(2., 0., 0.), vec3(0., 0., 2.));

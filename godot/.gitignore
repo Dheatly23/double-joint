@@ -1,2 +1,5 @@
 # Godot 4+ specific ignores
 .godot/
+
+# Godot WASM addons
+addons/godot_wasm

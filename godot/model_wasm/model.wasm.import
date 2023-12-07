@@ -1,0 +1,16 @@
+[remap]
+
+importer="godot_wasm.wasm"
+type="PackedDataContainer"
+uid="uid://dgxd8cvyfs1m4"
+path="res://.godot/imported/model.wasm-1788e9a246c75e500bca761325438c0c.res"
+
+[deps]
+
+source_file="res://model_wasm/model.wasm"
+dest_files=["res://.godot/imported/model.wasm-1788e9a246c75e500bca761325438c0c.res"]
+
+[params]
+
+name=""
+imports=[]

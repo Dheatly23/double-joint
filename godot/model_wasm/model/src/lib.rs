@@ -53,9 +53,9 @@ pub extern "C" fn build() {
 
 fn octahedron_encode(mut norm: Vec3) -> (u16, u16) {
     norm *= (norm.x.abs() + norm.y.abs() + norm.z.abs()).recip();
-    let mut out = vec2(norm.x, norm.y);
+    let mut out = norm.xy();
     if norm.z.is_sign_negative() {
-        out = (Vec2::ONE - out.yx()) * out.signum();
+        out = (1. - out.yx().abs()) * out.signum();
     }
     out = out * 0.5 + 0.5;
     out = (out * 65535.).clamp(Vec2::ZERO, Vec2::splat(65535.));
@@ -63,16 +63,15 @@ fn octahedron_encode(mut norm: Vec3) -> (u16, u16) {
 }
 
 fn octahedron_tangent_encode(tangent: Vec4) -> (u16, u16) {
-    let [x, y, z, w] = tangent.to_array();
-    let d = (x.abs() + y.abs() + z.abs()).recip();
+    let d = (tangent.x.abs() + tangent.y.abs() + tangent.z.abs()).recip();
 
-    let mut out = vec2(x, y) * d;
-    if (z * d).is_sign_negative() {
-        out = (Vec2::ONE - out.yx()) * out.signum();
+    let mut out = tangent.xy() * d;
+    if (tangent.z * d).is_sign_negative() {
+        out = (1. - out.yx().abs()) * out.signum();
     }
     out = out * 0.5 + 0.5;
     out.y = out.y.max(1. / 32767.) * 0.5 + 0.5;
-    if w.is_sign_negative() {
+    if tangent.w.is_sign_negative() {
         out.y = 1. - out.y;
     }
 
@@ -718,11 +717,11 @@ fn draw_hand(state: &mut State, basis: &Mat3, origin: &Vec3, uv: Vec2, uv_top: V
     );
 }
 
-const L2_OFF: f32 = 0.1;
-
 fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     let subdiv = (8, 4, 8);
     let use_layer2 = input.draw_layer2 != 0;
+    let l2_offv = Vec3::splat(input.layer2_off);
+
     let mut basis_;
     let mut basis;
     let mut origin;
@@ -744,8 +743,8 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             &mut *layer2,
             &Mat3::IDENTITY,
             &Vec3::ZERO,
-            vec3(-4. - L2_OFF, -10. - L2_OFF, -2. - L2_OFF),
-            vec3(4. + L2_OFF, 2. + L2_OFF, 2. + L2_OFF),
+            vec3(-4., -10., -2.) - l2_offv,
+            vec3(4., 2., 2.) + l2_offv,
             vec2(16., 32.) / 64.,
             vec3(8., 12., 4.) / 64.,
         );
@@ -774,8 +773,8 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             &mut *layer2,
             &basis,
             &HEAD_ORIG,
-            vec3(-4. - L2_OFF, -L2_OFF, -4. - L2_OFF),
-            vec3(4. + L2_OFF, 8. + L2_OFF, 4. + L2_OFF),
+            vec3(-4., 0., -4.) - l2_offv,
+            vec3(4., 8., 4.) + l2_offv,
             vec2(32., 0.) / 64.,
             vec3(8., 8., 8.) / 64.,
         );
@@ -817,7 +816,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             vec2(48., 48.) / 64.,
             vec3(4., 4., 4.) / 64.,
             false,
-            1. + L2_OFF / 2.,
+            1. + input.layer2_off / 2.,
             subdiv,
         );
     }
@@ -848,7 +847,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             r_,
             vec2(48., 52.) / 64.,
             vec3(4., 4., 4.) / 64.,
-            1. + L2_OFF / 2.,
+            1. + input.layer2_off / 2.,
             subdiv,
         );
     }
@@ -871,7 +870,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             &origin,
             vec2(48., 56.) / 64.,
             vec2(56., 48.) / 64.,
-            2. + L2_OFF,
+            2. + input.layer2_off,
         );
     }
 
@@ -911,7 +910,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             vec2(40., 32.) / 64.,
             vec3(4., 4., 4.) / 64.,
             true,
-            1. + L2_OFF / 2.,
+            1. + input.layer2_off / 2.,
             subdiv,
         );
     }
@@ -943,7 +942,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             r_,
             vec2(40., 36.) / 64.,
             vec3(4., 4., 4.) / 64.,
-            1. + L2_OFF / 2.,
+            1. + input.layer2_off / 2.,
             subdiv,
         );
     }
@@ -966,7 +965,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             &origin,
             vec2(40., 40.) / 64.,
             vec2(48., 32.) / 64.,
-            2. + L2_OFF,
+            2. + input.layer2_off,
         );
     }
 
@@ -1001,7 +1000,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             vec2(0., 48.) / 64.,
             vec3(4., 4., 4.) / 64.,
             true,
-            1. + L2_OFF / 2.,
+            1. + input.layer2_off / 2.,
             subdiv,
         );
     }
@@ -1032,7 +1031,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             r_,
             vec2(0., 52.) / 64.,
             vec3(4., 4., 4.) / 64.,
-            1. + L2_OFF / 2.,
+            1. + input.layer2_off / 2.,
             subdiv,
         );
     }
@@ -1055,7 +1054,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             &origin,
             vec2(0., 56.) / 64.,
             vec2(8., 48.) / 64.,
-            2. + L2_OFF,
+            2. + input.layer2_off,
         );
     }
 
@@ -1090,7 +1089,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             vec2(0., 32.) / 64.,
             vec3(4., 4., 4.) / 64.,
             true,
-            1. + L2_OFF / 2.,
+            1. + input.layer2_off / 2.,
             subdiv,
         );
     }
@@ -1121,7 +1120,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             r_,
             vec2(0., 36.) / 64.,
             vec3(4., 4., 4.) / 64.,
-            1. + L2_OFF / 2.,
+            1. + input.layer2_off / 2.,
             subdiv,
         );
     }
@@ -1144,7 +1143,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
             &origin,
             vec2(0., 40.) / 64.,
             vec2(8., 32.) / 64.,
-            2. + L2_OFF,
+            2. + input.layer2_off,
         );
     }
 }

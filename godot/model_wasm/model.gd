@@ -11,6 +11,10 @@ const __FLAGS := Mesh.ARRAY_FORMAT_VERTEX | Mesh.ARRAY_FORMAT_NORMAL | Mesh.ARRA
 	set(v):
 		material_layer2 = v
 		queue_rerender = true
+@export_range(0, 1, 0.01, "or_greater") var layer2_offset: float = 0.1:
+	set(v):
+		layer2_offset = v
+		queue_rerender = true
 
 var queue_rerender := true
 
@@ -53,6 +57,7 @@ func __render():
 
 	var layer2 := material_layer2 != null
 	__inst.put_8(__ptr + 0x58, 1 if layer2 else 0)
+	__inst.put_float(__ptr + 0x5C, layer2_offset)
 	var ba := PackedVector3Array()
 	ba.append_array(__basis_to_arr(__skel.get_bone_pose(1).basis))
 	ba.append_array(__basis_to_arr(__skel.get_bone_pose(3).basis))
@@ -63,7 +68,7 @@ func __render():
 	ba.append_array(__basis_to_arr(__skel.get_bone_pose(10).basis))
 	ba.append_array(__basis_to_arr(__skel.get_bone_pose(12).basis))
 	ba.append_array(__basis_to_arr(__skel.get_bone_pose(13).basis))
-	__inst.put_array(__ptr + 0x5C, ba)
+	__inst.put_array(__ptr + 0x60, ba)
 
 	__inst.call_wasm("build", [])
 

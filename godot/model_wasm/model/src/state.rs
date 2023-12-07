@@ -45,6 +45,7 @@ pub struct ExportState {
 #[repr(C)]
 pub struct Angles {
     pub draw_layer2: u8,
+    pub layer2_off: f32,
 
     pub head_basis: Mat3,
 
@@ -157,13 +158,19 @@ impl ExportState {
 
             angles: Angles {
                 draw_layer2: 0,
+                layer2_off: 0.0,
+
                 head_basis: Mat3::ZERO,
+
                 larm_basis: Mat3::ZERO,
                 lelbow_basis: Mat3::ZERO,
+
                 rarm_basis: Mat3::ZERO,
                 relbow_basis: Mat3::ZERO,
+
                 lleg_basis: Mat3::ZERO,
                 lknee_basis: Mat3::ZERO,
+
                 rleg_basis: Mat3::ZERO,
                 rknee_basis: Mat3::ZERO,
             },

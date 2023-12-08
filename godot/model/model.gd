@@ -847,9 +847,23 @@ func _enter_tree():
 	if not skeleton.is_connected("pose_updated", c):
 		skeleton.connect("pose_updated", c)
 
+func _ready():
+	if Engine.is_editor_hint():
+		return
+
+	var sum := 0.0
+	for i in range(100):
+		var start := Time.get_ticks_usec()
+		rerender()
+		var end := Time.get_ticks_usec()
+		sum += (end - start) as float
+
+	print("Render time average: %f milliseconds" % (sum / 100 / 1000))
+
 func _process(_delta):
 	if queue_rerender:
 		queue_rerender = false
+
 		rerender()
 
 func _update_pose():

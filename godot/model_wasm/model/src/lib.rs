@@ -1,3 +1,5 @@
+#![cfg_attr(feature = "core-simd", feature(portable_simd))]
+
 mod state;
 
 use core::f32::consts::*;
@@ -82,8 +84,8 @@ fn octahedron_tangent_encode(tangent: Vec4) -> (u16, u16) {
     }
 }
 
-fn orthonormalize(basis: &mut Mat3) {
-    let Mat3 {
+fn orthonormalize(basis: &mut Mat3A) {
+    let Mat3A {
         x_axis: x,
         y_axis: y,
         z_axis: z,
@@ -95,88 +97,83 @@ fn orthonormalize(basis: &mut Mat3) {
 
 const ONEISH: f32 = 1.0 - 1e-6;
 
-fn get_angle_x(basis: &Mat3) -> f32 {
-    let c2 = basis.z_axis.x;
-    if (-ONEISH..=ONEISH).contains(&c2) {
-        if (basis.y_axis.y == 1.)
-            && (basis.y_axis.x == 0.)
-            && (basis.x_axis.y == 0.)
-            && (basis.z_axis.y == 0.)
-            && (basis.y_axis.z == 0.)
+fn get_angle_x(basis: &Mat3A) -> f32 {
+    let t = basis.z_axis[0];
+    if (-ONEISH..=ONEISH).contains(&t) {
+        if (basis.y_axis == Vec3A::new(0., 1., 0.))
+            && (basis.x_axis[1] == 0.)
+            && (basis.z_axis[1] == 0.)
         {
             0.
         } else {
-            (-basis.z_axis.y).atan2(basis.z_axis.z)
+            (-basis.z_axis[1]).atan2(basis.z_axis[2])
         }
     } else {
-        basis.y_axis.z.atan2(basis.y_axis.y)
+        basis.y_axis[2].atan2(basis.y_axis[1])
     }
 }
 
-fn euler_angle_yxz(basis: &Mat3) -> Vec3 {
-    let c2 = basis.z_axis.y;
-    if (-ONEISH..=ONEISH).contains(&c2) {
-        if (basis.x_axis.x == 1.)
-            && (basis.y_axis.x == 0.)
-            && (basis.x_axis.y == 0.)
-            && (basis.z_axis.x == 0.)
-            && (basis.x_axis.z == 0.)
+fn euler_angle_yxz(basis: &Mat3A) -> Vec3 {
+    let t = basis.z_axis[1];
+    if (-ONEISH..=ONEISH).contains(&t) {
+        if (basis.x_axis == Vec3A::new(1., 0., 0.))
+            && (basis.y_axis[0] == 0.)
+            && (basis.z_axis[0] == 0.)
         {
-            vec3((-c2).atan2(basis.y_axis.y), 0., 0.)
+            vec3((-t).atan2(basis.y_axis[1]), 0., 0.)
         } else {
             vec3(
-                (-c2).asin(),
-                basis.z_axis.x.atan2(basis.z_axis.z),
-                basis.x_axis.y.atan2(basis.y_axis.y),
+                (-t).asin(),
+                basis.z_axis[0].atan2(basis.z_axis[2]),
+                basis.x_axis[1].atan2(basis.y_axis[1]),
             )
         }
-    } else if c2.is_sign_positive() {
-        vec3(-FRAC_PI_2, -basis.y_axis.x.atan2(basis.x_axis.x), 0.)
+    } else if t.is_sign_positive() {
+        vec3(-FRAC_PI_2, -basis.y_axis[0].atan2(basis.x_axis[0]), 0.)
     } else {
-        vec3(FRAC_PI_2, basis.y_axis.x.atan2(basis.x_axis.x), 0.)
+        vec3(FRAC_PI_2, basis.y_axis[0].atan2(basis.x_axis[0]), 0.)
     }
 }
 
-fn euler_angle_xyx(basis: &Mat3) -> Vec3 {
-    let c2 = basis.x_axis.x;
-    if (-ONEISH..=ONEISH).contains(&c2) {
+fn euler_angle_xyx(basis: &Mat3A) -> Vec3 {
+    let t = basis.x_axis[0];
+    if (-ONEISH..=ONEISH).contains(&t) {
         vec3(
-            basis.y_axis.x.atan2(-basis.z_axis.x),
-            c2.acos(),
-            basis.x_axis.y.atan2(basis.x_axis.z),
+            basis.y_axis[0].atan2(-basis.z_axis[0]),
+            t.acos(),
+            basis.x_axis[1].atan2(basis.x_axis[2]),
         )
-    } else if c2.is_sign_positive() {
-        vec3(basis.z_axis.y.atan2(basis.y_axis.y), 0., 0.)
+    } else if t.is_sign_positive() {
+        vec3(basis.z_axis[1].atan2(basis.y_axis[1]), 0., 0.)
     } else {
-        vec3((-basis.z_axis.y).atan2(basis.y_axis.y), PI, 0.)
+        vec3((-basis.z_axis[1]).atan2(basis.y_axis[1]), PI, 0.)
     }
 }
 
-fn euler_angle_yxy(basis: &Mat3) -> Vec3 {
-    let c2 = basis.y_axis.y;
-    if (-ONEISH..=ONEISH).contains(&c2) {
+fn euler_angle_yxy(basis: &Mat3A) -> Vec3 {
+    let t = basis.y_axis[1];
+    if (-ONEISH..=ONEISH).contains(&t) {
         vec3(
-            basis.x_axis.y.atan2(basis.z_axis.y),
-            c2.acos(),
-            basis.y_axis.x.atan2(-basis.y_axis.z),
+            basis.x_axis[1].atan2(basis.z_axis[1]),
+            t.acos(),
+            basis.y_axis[0].atan2(-basis.y_axis[2]),
         )
-    } else if c2.is_sign_positive() {
-        vec3(basis.x_axis.z.atan2(basis.x_axis.x), 0., 0.)
+    } else if t.is_sign_positive() {
+        vec3(basis.x_axis[2].atan2(basis.x_axis[0]), 0., 0.)
     } else {
-        vec3((-basis.x_axis.z).atan2(basis.x_axis.x), 0., 0.)
+        vec3((-basis.x_axis[2]).atan2(basis.x_axis[0]), 0., 0.)
     }
 }
 
 fn draw_quad(
     state: &mut State,
-    points: &[Vec3; 4],
-    mut normal: Vec3,
-    mut tangent: Vec4,
+    points: &[Vec3A; 4],
+    normal: &Vec3A,
+    tangent: &Vec4,
     uv: Vec2,
     mut duv: Vec2,
 ) {
-    normal = normal.normalize();
-    tangent = Vec4::from((tangent.xyz().normalize(), tangent.w));
+    let normal = (*normal).into();
     let i = state.len() as u32;
 
     let Vec2 { x: x1, y: y1 } = uv;
@@ -185,9 +182,9 @@ fn draw_quad(
     state.add_vertices(
         points
             .iter()
-            .copied()
+            .map(|&v| Vec3::from(v))
             .zip([uv, vec2(x2, y1), vec2(x1, y2), duv])
-            .map(move |(v, uv)| (v, normal, tangent, uv)),
+            .map(move |(v, uv)| (v, normal, *tangent, uv)),
     );
 
     state.add_indices([i, i + 3, i + 1, i, i + 2, i + 3]);
@@ -195,16 +192,15 @@ fn draw_quad(
 
 fn draw_quad_subdiv(
     state: &mut State,
-    [p00, p01, p10, p11]: &[Vec3; 4],
-    mut normal: Vec3,
-    mut tangent: Vec4,
+    [p00, p01, p10, p11]: &[Vec3A; 4],
+    normal: &Vec3A,
+    tangent: &Vec4,
     uv: Vec2,
     duv: Vec2,
     (sx, sy): (usize, usize),
     subdiv_shift: bool,
 ) {
-    normal = normal.normalize();
-    tangent = Vec4::from((tangent.xyz().normalize(), tangent.w));
+    let normal = (*normal).into();
     let i = state.len();
 
     let ssx = subdiv_shift && (sx & 1 != 0);
@@ -223,19 +219,19 @@ fn draw_quad_subdiv(
         let p1 = p01.lerp(*p11, dy);
         let dv = uv.y + duv.y * dy;
 
-        for mut x in 0..ex {
+        state.add_vertices((0..ex).map(|mut x| {
             x *= 2;
             x = if ssx { x.saturating_sub(1) } else { x.min(sx) };
 
             let dx = x as f32 / sx_;
 
-            state.add_vertices([(
-                p0.lerp(p1, dx),
+            (
+                p0.lerp(p1, dx).into(),
                 normal,
-                tangent,
+                *tangent,
                 vec2(uv.x + duv.x * dx, dv),
-            )]);
-        }
+            )
+        }));
     }
 
     for y in 0..(sy + 1) / 2 {
@@ -253,19 +249,23 @@ fn draw_quad_subdiv(
 
 fn draw_cube(
     state: &mut State,
-    basis: &Mat3,
-    origin: &Vec3,
-    start: Vec3,
-    end: Vec3,
+    transform: &Affine3A,
+    start: &Vec3A,
+    end: &Vec3A,
     uv: Vec2,
     dim: Vec3,
 ) {
-    let sx = basis.x_axis * start.x;
-    let sy = basis.y_axis * start.y;
-    let sz = basis.z_axis * start.z;
-    let ex = basis.x_axis * end.x;
-    let ey = basis.y_axis * end.y;
-    let ez = basis.z_axis * end.z;
+    let Affine3A {
+        matrix3: basis,
+        translation: origin,
+    } = transform;
+
+    let sx = basis.x_axis * start.xxx();
+    let sy = basis.y_axis * start.yyy();
+    let sz = basis.z_axis * start.zzz();
+    let ex = basis.x_axis * end.xxx();
+    let ey = basis.y_axis * end.yyy();
+    let ez = basis.z_axis * end.zzz();
 
     let p000 = *origin + sx + sy + sz;
     let p001 = *origin + sx + sy + ez;
@@ -280,8 +280,8 @@ fn draw_cube(
     draw_quad(
         &mut *state,
         &[p001, p101, p011, p111],
-        basis.z_axis,
-        Vec4::from((basis.x_axis, 1.)),
+        &basis.z_axis,
+        &basis.x_axis.extend(1.),
         vec2(uv.x + dim.z, uv.y + dim.z + dim.y),
         vec2(dim.x, -dim.y),
     );
@@ -289,8 +289,8 @@ fn draw_cube(
     draw_quad(
         &mut *state,
         &[p100, p000, p110, p010],
-        -basis.z_axis,
-        Vec4::from((-basis.x_axis, 1.)),
+        &-basis.z_axis,
+        &(-basis.x_axis).extend(1.),
         vec2(uv.x + dim.z * 2. + dim.x, uv.y + dim.z + dim.y),
         vec2(dim.x, -dim.y),
     );
@@ -298,8 +298,8 @@ fn draw_cube(
     draw_quad(
         &mut *state,
         &[p000, p001, p010, p011],
-        -basis.x_axis,
-        Vec4::from((basis.z_axis, -1.)),
+        &-basis.x_axis,
+        &basis.z_axis.extend(-1.),
         vec2(uv.x, uv.y + dim.z + dim.y),
         vec2(dim.z, -dim.y),
     );
@@ -307,8 +307,8 @@ fn draw_cube(
     draw_quad(
         &mut *state,
         &[p101, p100, p111, p110],
-        basis.x_axis,
-        Vec4::from((-basis.z_axis, -1.)),
+        &basis.x_axis,
+        &(-basis.z_axis).extend(-1.),
         vec2(uv.x + dim.z + dim.x, uv.y + dim.z + dim.y),
         vec2(dim.z, -dim.y),
     );
@@ -316,8 +316,8 @@ fn draw_cube(
     draw_quad(
         &mut *state,
         &[p011, p111, p010, p110],
-        basis.y_axis,
-        Vec4::from((basis.x_axis, -1.)),
+        &basis.y_axis,
+        &basis.x_axis.extend(-1.),
         vec2(uv.x + dim.z, uv.y + dim.z),
         vec2(dim.x, -dim.z),
     );
@@ -325,8 +325,8 @@ fn draw_cube(
     draw_quad(
         &mut *state,
         &[p000, p100, p001, p101],
-        -basis.y_axis,
-        Vec4::from((basis.x_axis, -1.)),
+        &-basis.y_axis,
+        &basis.x_axis.extend(-1.),
         vec2(uv.x + dim.z + dim.x, uv.y),
         vec2(dim.x, dim.z),
     );
@@ -334,18 +334,24 @@ fn draw_cube(
 
 fn draw_single_joint(
     state: &mut State,
-    basis: &Mat3,
-    origin: &Vec3,
+    transform: &Affine3A,
     r: f32,
-    Vec2 { x: u, y: v }: Vec2,
-    Vec3 {
-        x: dx,
-        y: dy_,
-        z: dz,
-    }: Vec3,
+    uv: Vec2,
+    dim: Vec3,
     scale: f32,
     (sx, sy, sz): (usize, usize, usize),
 ) {
+    let Affine3A {
+        matrix3: basis,
+        translation: origin,
+    } = transform;
+    let Vec2 { x: u, y: v } = uv;
+    let Vec3 {
+        x: dx,
+        y: dy_,
+        z: dz,
+    } = dim;
+
     // Trig prep
     let (s, c) = r.sin_cos();
     let t = (r * 0.5).tan() * scale;
@@ -375,8 +381,8 @@ fn draw_single_joint(
         draw_quad_subdiv(
             &mut *state,
             &[b01, b11, m01, m11],
-            basis.z_axis,
-            Vec4::from((basis.x_axis, 1.)),
+            &basis.z_axis,
+            &basis.x_axis.extend(1.),
             vec2(u + dz, v + dz + dy),
             vec2(dx, -dy),
             (sx, sy),
@@ -386,8 +392,8 @@ fn draw_single_joint(
         draw_quad_subdiv(
             &mut *state,
             &[b10, b00, m10, m00],
-            -basis.z_axis,
-            Vec4::from((-basis.x_axis, 1.)),
+            &-basis.z_axis,
+            &(-basis.x_axis).extend(1.),
             vec2(u + dz * 2. + dx, v + dz + dy),
             vec2(dx, -dy),
             (sx, sy),
@@ -397,8 +403,8 @@ fn draw_single_joint(
         draw_quad_subdiv(
             &mut *state,
             &[b00, b01, m00, m01],
-            -basis.x_axis,
-            Vec4::from((basis.z_axis, -1.)),
+            &-basis.x_axis,
+            &basis.z_axis.extend(-1.),
             vec2(u, v + dz + dy),
             vec2(dz, -dy),
             (sz, sy),
@@ -408,8 +414,8 @@ fn draw_single_joint(
         draw_quad_subdiv(
             &mut *state,
             &[b11, b10, m11, m10],
-            basis.x_axis,
-            Vec4::from((-basis.z_axis, -1.)),
+            &basis.x_axis,
+            &(-basis.z_axis).extend(-1.),
             vec2(u + dz + dx, v + dz + dy),
             vec2(dz, -dy),
             (sz, sy),
@@ -420,7 +426,7 @@ fn draw_single_joint(
     // Draw top
     {
         // Top plane
-        let basis = mat3(
+        let basis = Mat3A::from_cols(
             basis.x_axis,
             basis.y_axis * c + basis.z_axis * s,
             basis.z_axis * c - basis.y_axis * s,
@@ -437,8 +443,8 @@ fn draw_single_joint(
         draw_quad_subdiv(
             &mut *state,
             &[m01, m11, t01, t11],
-            basis.z_axis,
-            Vec4::from((basis.x_axis, 1.)),
+            &basis.z_axis,
+            &basis.x_axis.extend(1.),
             vec2(u + dz, v + dz + dy_),
             vec2(dx, -dy),
             (sx, sy),
@@ -448,8 +454,8 @@ fn draw_single_joint(
         draw_quad_subdiv(
             &mut *state,
             &[m10, m00, t10, t00],
-            -basis.z_axis,
-            Vec4::from((-basis.x_axis, 1.)),
+            &-basis.z_axis,
+            &(-basis.x_axis).extend(1.),
             vec2(u + dz * 2. + dx, v + dz + dy_),
             vec2(dx, -dy),
             (sx, sy),
@@ -459,8 +465,8 @@ fn draw_single_joint(
         draw_quad_subdiv(
             &mut *state,
             &[m00, m01, t00, t01],
-            -basis.x_axis,
-            Vec4::from((basis.z_axis, -1.)),
+            &-basis.x_axis,
+            &basis.z_axis.extend(-1.),
             vec2(u, v + dz + dy_),
             vec2(dz, -dy),
             (sz, sy),
@@ -470,8 +476,8 @@ fn draw_single_joint(
         draw_quad_subdiv(
             &mut *state,
             &[m11, m10, t11, t10],
-            basis.x_axis,
-            Vec4::from((-basis.z_axis, -1.)),
+            &basis.x_axis,
+            &(-basis.z_axis).extend(-1.),
             vec2(u + dz + dx, v + dz + dy_),
             vec2(dz, -dy),
             (sz, sy),
@@ -482,22 +488,28 @@ fn draw_single_joint(
 
 fn draw_double_joint(
     state: &mut State,
-    basis: &Mat3,
-    origin: &Vec3,
+    transform: &Affine3A,
     r: Vec3,
-    Vec2 { x: u, y: v }: Vec2,
-    Vec3 {
-        x: dx,
-        y: dy_,
-        z: dz,
-    }: Vec3,
+    uv: Vec2,
+    dim: Vec3,
     right_handed: bool,
     scale: f32,
     (sx, sy, sz): (usize, usize, usize),
 ) {
+    let Affine3A {
+        matrix3: basis,
+        translation: origin,
+    } = transform;
+    let Vec2 { x: u, y: v } = uv;
+    let Vec3 {
+        x: dx,
+        y: dy_,
+        z: dz,
+    } = dim;
+
     // Rotate
     let (s, c) = (r.x + r.z).sin_cos();
-    let basis = mat3(
+    let basis = Mat3A::from_cols(
         basis.x_axis * c + basis.z_axis * s,
         basis.y_axis,
         basis.z_axis * c - basis.x_axis * s,
@@ -536,8 +548,8 @@ fn draw_double_joint(
         draw_quad_subdiv(
             &mut *state,
             &[b01, b11, m01, m11],
-            basis.z_axis,
-            Vec4::from((basis.x_axis, 1.)),
+            &basis.z_axis,
+            &basis.x_axis.extend(1.),
             vec2(u + dz, v + dz + dy),
             vec2(dx, -dy),
             (sx, sy),
@@ -547,8 +559,8 @@ fn draw_double_joint(
         draw_quad_subdiv(
             &mut *state,
             &[b10, b00, m10, m00],
-            -basis.z_axis,
-            Vec4::from((-basis.x_axis, 1.)),
+            &-basis.z_axis,
+            &(-basis.x_axis).extend(1.),
             vec2(u + dz * 2. + dx, v + dz + dy),
             vec2(dx, -dy),
             (sx, sy),
@@ -558,8 +570,8 @@ fn draw_double_joint(
         draw_quad_subdiv(
             &mut *state,
             &[b00, b01, m00, m01],
-            -basis.x_axis,
-            Vec4::from((basis.z_axis, -1.)),
+            &-basis.x_axis,
+            &basis.z_axis.extend(-1.),
             vec2(u, v + dz + dy),
             vec2(dz, -dy),
             (sz, sy),
@@ -569,8 +581,8 @@ fn draw_double_joint(
         draw_quad_subdiv(
             &mut *state,
             &[b11, b10, m11, m10],
-            basis.x_axis,
-            Vec4::from((-basis.z_axis, -1.)),
+            &basis.x_axis,
+            &(-basis.z_axis).extend(-1.),
             vec2(u + dz + dx, v + dz + dy),
             vec2(dz, -dy),
             (sz, sy),
@@ -580,8 +592,8 @@ fn draw_double_joint(
         draw_quad(
             &mut *state,
             &[b01, b11, b00, b10],
-            basis.y_axis,
-            Vec4::from((basis.x_axis, -1.)),
+            &basis.y_axis,
+            &basis.x_axis.extend(-1.),
             vec2(u + dz, v + dz),
             vec2(dx, -dz),
         );
@@ -591,7 +603,7 @@ fn draw_double_joint(
     {
         // Top plane
         let basis = basis
-            * Mat3::from_axis_angle(
+            * Mat3A::from_axis_angle(
                 if right_handed {
                     vec3(-c, 0., s)
                 } else {
@@ -611,8 +623,8 @@ fn draw_double_joint(
         draw_quad_subdiv(
             &mut *state,
             &[m01, m11, t01, t11],
-            basis.z_axis,
-            Vec4::from((basis.x_axis, 1.)),
+            &basis.z_axis,
+            &basis.x_axis.extend(1.),
             vec2(u + dz, v + dz + dy_),
             vec2(dx, -dy),
             (sx, sy),
@@ -622,8 +634,8 @@ fn draw_double_joint(
         draw_quad_subdiv(
             &mut *state,
             &[m10, m00, t10, t00],
-            -basis.z_axis,
-            Vec4::from((-basis.x_axis, 1.)),
+            &-basis.z_axis,
+            &(-basis.x_axis).extend(1.),
             vec2(u + dz * 2. + dx, v + dz + dy_),
             vec2(dx, -dy),
             (sx, sy),
@@ -633,8 +645,8 @@ fn draw_double_joint(
         draw_quad_subdiv(
             &mut *state,
             &[m00, m01, t00, t01],
-            -basis.x_axis,
-            Vec4::from((basis.z_axis, -1.)),
+            &-basis.x_axis,
+            &basis.z_axis.extend(-1.),
             vec2(u, v + dz + dy_),
             vec2(dz, -dy),
             (sz, sy),
@@ -644,8 +656,8 @@ fn draw_double_joint(
         draw_quad_subdiv(
             &mut *state,
             &[m11, m10, t11, t10],
-            basis.x_axis,
-            Vec4::from((-basis.z_axis, -1.)),
+            &basis.x_axis,
+            &(-basis.z_axis).extend(-1.),
             vec2(u + dz + dx, v + dz + dy_),
             vec2(dz, -dy),
             (sz, sy),
@@ -654,11 +666,18 @@ fn draw_double_joint(
     }
 }
 
-fn draw_hand(state: &mut State, basis: &Mat3, origin: &Vec3, uv: Vec2, uv_top: Vec2, scale: f32) {
+fn draw_hand(state: &mut State, transform: &Affine3A, uv: Vec2, uv_top: Vec2, scale: f32) {
+    let Affine3A {
+        matrix3: basis,
+        translation: origin,
+    } = transform;
     let Vec2 { x: u, y: v } = uv;
-    let bx = basis.x_axis * scale;
-    let by = basis.y_axis * scale;
-    let bz = basis.z_axis * scale;
+
+    let Mat3A {
+        x_axis: bx,
+        y_axis: by,
+        z_axis: bz,
+    } = basis.mul_scalar(scale);
 
     let p000 = *origin - bx - by - bz;
     let p001 = *origin - bx - by + bz;
@@ -674,8 +693,8 @@ fn draw_hand(state: &mut State, basis: &Mat3, origin: &Vec3, uv: Vec2, uv_top: V
     draw_quad(
         &mut *state,
         &[p001, p101, p011, p111],
-        basis.z_axis,
-        Vec4::from((basis.x_axis, 1.)),
+        &basis.z_axis,
+        &basis.x_axis.extend(1.),
         vec2(u + D, v + D * 2.),
         vec2(D, -D),
     );
@@ -683,8 +702,8 @@ fn draw_hand(state: &mut State, basis: &Mat3, origin: &Vec3, uv: Vec2, uv_top: V
     draw_quad(
         &mut *state,
         &[p100, p000, p110, p010],
-        -basis.z_axis,
-        Vec4::from((-basis.x_axis, 1.)),
+        &-basis.z_axis,
+        &(-basis.x_axis).extend(1.),
         vec2(u + D * 3., v + D * 2.),
         vec2(D, -D),
     );
@@ -692,8 +711,8 @@ fn draw_hand(state: &mut State, basis: &Mat3, origin: &Vec3, uv: Vec2, uv_top: V
     draw_quad(
         &mut *state,
         &[p000, p001, p010, p011],
-        -basis.x_axis,
-        Vec4::from((basis.z_axis, -1.)),
+        &-basis.x_axis,
+        &basis.z_axis.extend(-1.),
         vec2(u, v + D * 2.),
         vec2(D, -D),
     );
@@ -701,8 +720,8 @@ fn draw_hand(state: &mut State, basis: &Mat3, origin: &Vec3, uv: Vec2, uv_top: V
     draw_quad(
         &mut *state,
         &[p101, p100, p111, p110],
-        basis.x_axis,
-        Vec4::from((-basis.z_axis, -1.)),
+        &basis.x_axis,
+        &(-basis.z_axis).extend(-1.),
         vec2(u + D * 2., v + D * 2.),
         vec2(D, -D),
     );
@@ -710,9 +729,9 @@ fn draw_hand(state: &mut State, basis: &Mat3, origin: &Vec3, uv: Vec2, uv_top: V
     draw_quad(
         &mut *state,
         &[p000, p100, p001, p101],
-        -basis.y_axis,
-        Vec4::from((basis.x_axis, -1.)),
-        vec2(uv_top.x, uv_top.y),
+        &-basis.y_axis,
+        &basis.x_axis.extend(-1.),
+        uv_top,
         vec2(D, D),
     );
 }
@@ -720,86 +739,85 @@ fn draw_hand(state: &mut State, basis: &Mat3, origin: &Vec3, uv: Vec2, uv_top: V
 fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     let subdiv = (8, 4, 8);
     let use_layer2 = input.draw_layer2 != 0;
-    let l2_offv = Vec3::splat(input.layer2_off);
+    let l2_offv = Vec3A::splat(input.layer2_off);
 
-    let mut basis_;
-    let mut basis;
-    let mut origin;
+    let mut t_;
+    let mut t;
     let mut r;
     let mut r_;
 
     // Draw body
     draw_cube(
         &mut *layer1,
-        &Mat3::IDENTITY,
-        &Vec3::ZERO,
-        vec3(-4., -10., -2.),
-        vec3(4., 2., 2.),
+        &Affine3A::IDENTITY,
+        &Vec3A::new(-4., -10., -2.),
+        &Vec3A::new(4., 2., 2.),
         vec2(16., 16.) / 64.,
         vec3(8., 12., 4.) / 64.,
     );
     if use_layer2 {
         draw_cube(
             &mut *layer2,
-            &Mat3::IDENTITY,
-            &Vec3::ZERO,
-            vec3(-4., -10., -2.) - l2_offv,
-            vec3(4., 2., 2.) + l2_offv,
+            &Affine3A::IDENTITY,
+            &(Vec3A::new(-4., -10., -2.) - l2_offv),
+            &(Vec3A::new(4., 2., 2.) + l2_offv),
             vec2(16., 32.) / 64.,
             vec3(8., 12., 4.) / 64.,
         );
     }
 
     // Draw head
-    basis = input.head_basis;
-    orthonormalize(&mut basis);
-    r = euler_angle_yxz(&basis);
-    basis = Mat3::from_quat(
+    t = Affine3A::from_mat3_translation(input.head_basis, Vec3::new(0., 2., 0.));
+    orthonormalize(&mut t.matrix3);
+    r = euler_angle_yxz(&t.matrix3);
+    t.matrix3 = Mat3A::from_quat(
         Quat::from_rotation_y(r.y) * Quat::from_rotation_x(r.x.clamp(-FRAC_PI_2, FRAC_PI_2)),
     );
 
-    const HEAD_ORIG: Vec3 = vec3(0., 2., 0.);
     draw_cube(
         &mut *layer1,
-        &basis,
-        &HEAD_ORIG,
-        vec3(-4., 0., -4.),
-        vec3(4., 8., 4.),
+        &t,
+        &Vec3A::new(-4., 0., -4.),
+        &Vec3A::new(4., 8., 4.),
         vec2(0., 0.) / 64.,
         vec3(8., 8., 8.) / 64.,
     );
     if use_layer2 {
         draw_cube(
             &mut *layer2,
-            &basis,
-            &HEAD_ORIG,
-            vec3(-4., 0., -4.) - l2_offv,
-            vec3(4., 8., 4.) + l2_offv,
+            &t,
+            &(Vec3A::new(-4., 0., -4.) - l2_offv),
+            &(Vec3A::new(4., 8., 4.) + l2_offv),
             vec2(32., 0.) / 64.,
             vec3(8., 8., 8.) / 64.,
         );
     }
 
     // Draw left arm
-    basis_ = mat3(
-        -input.larm_basis.y_axis,
-        input.larm_basis.x_axis,
-        input.larm_basis.z_axis,
+    t = Affine3A::from_cols(
+        -Vec3A::from(input.larm_basis.y_axis),
+        input.larm_basis.x_axis.into(),
+        input.larm_basis.z_axis.into(),
+        Vec3A::new(SQRT_2 * 2. + 4., 0., 0.),
     );
-    orthonormalize(&mut basis_);
-    r = -euler_angle_xyx(&basis_);
+    orthonormalize(&mut t.matrix3);
+    r = -euler_angle_xyx(&t.matrix3);
     r.y = r.y.clamp(-FRAC_PI_2, FRAC_PI_2);
-    basis = Mat3::from_quat(
+    t.matrix3 = Mat3A::from_quat(
         Quat::from_rotation_x(r.z) * Quat::from_rotation_y(r.y) * Quat::from_rotation_x(r.x),
     );
-    (basis.x_axis, basis.y_axis) = (basis.y_axis, -basis.x_axis);
-    basis_ = mat3(vec3(0., 2., 0.), vec3(-2., 0., 0.), vec3(0., 0., 2.));
+    (t.matrix3.x_axis, t.matrix3.y_axis) = (t.matrix3.y_axis, -t.matrix3.x_axis);
+    t_ = Affine3A::from_cols(
+        Vec3A::new(0., 2., 0.),
+        Vec3A::new(-2., 0., 0.),
+        Vec3A::new(0., 0., 2.),
+        t.translation,
+    );
+    t.translation += t.matrix3.y_axis * ((SQRT_2 + 1.) * -2.);
 
-    origin = vec3(SQRT_2 * 2. + 4., 0., 0.);
     draw_double_joint(
         &mut *layer1,
-        &basis_,
-        &origin,
+        &t_,
         r,
         vec2(32., 48.) / 64.,
         vec3(4., 4., 4.) / 64.,
@@ -810,8 +828,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_double_joint(
             &mut *layer2,
-            &basis_,
-            &origin,
+            &t_,
             r,
             vec2(48., 48.) / 64.,
             vec3(4., 4., 4.) / 64.,
@@ -822,17 +839,19 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw left elbow
-    basis_ = input.lelbow_basis;
-    orthonormalize(&mut basis_);
-    r_ = get_angle_x(&basis_).clamp(-FRAC_PI_2, FRAC_PI_2);
-    origin += basis.y_axis * ((SQRT_2 + 1.) * -2.);
-    basis_ = basis * 2.;
-    basis = basis * Mat3::from_rotation_x(r_);
+    t_ = Affine3A {
+        matrix3: input.lelbow_basis.into(),
+        translation: t.translation,
+    };
+    orthonormalize(&mut t_.matrix3);
+    r_ = get_angle_x(&t_.matrix3).clamp(-FRAC_PI_2, FRAC_PI_2);
+    t_.matrix3 = t.matrix3 * 2.;
+    t.matrix3 *= Mat3A::from_rotation_x(r_);
+    t.translation += t.matrix3.y_axis * -4.;
 
     draw_single_joint(
         &mut *layer1,
-        &basis_,
-        &origin,
+        &t_,
         r_,
         vec2(32., 52.) / 64.,
         vec3(4., 4., 4.) / 64.,
@@ -842,8 +861,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_single_joint(
             &mut *layer2,
-            &basis_,
-            &origin,
+            &t_,
             r_,
             vec2(48., 52.) / 64.,
             vec3(4., 4., 4.) / 64.,
@@ -853,12 +871,9 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw left hand
-    origin += basis.y_axis * -4.;
-
     draw_hand(
         &mut *layer1,
-        &basis,
-        &origin,
+        &t,
         vec2(32., 56.) / 64.,
         vec2(40., 48.) / 64.,
         2.,
@@ -866,8 +881,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_hand(
             &mut *layer2,
-            &basis,
-            &origin,
+            &t,
             vec2(48., 56.) / 64.,
             vec2(56., 48.) / 64.,
             2. + input.layer2_off,
@@ -875,25 +889,30 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw right arm
-    basis_ = mat3(
-        input.rarm_basis.y_axis,
-        -input.rarm_basis.x_axis,
-        input.rarm_basis.z_axis,
+    t = Affine3A::from_cols(
+        input.rarm_basis.y_axis.into(),
+        -Vec3A::from(input.rarm_basis.x_axis),
+        input.rarm_basis.z_axis.into(),
+        Vec3A::new(SQRT_2 * -2. - 4., 0., 0.),
     );
-    orthonormalize(&mut basis_);
-    r = euler_angle_xyx(&basis_);
+    orthonormalize(&mut t.matrix3);
+    r = euler_angle_xyx(&t.matrix3);
     r.y = -r.y.clamp(-FRAC_PI_2, FRAC_PI_2);
-    basis = Mat3::from_quat(
+    t.matrix3 = Mat3A::from_quat(
         Quat::from_rotation_x(-r.z) * Quat::from_rotation_y(r.y) * Quat::from_rotation_x(-r.x),
     );
-    (basis.x_axis, basis.y_axis) = (-basis.y_axis, basis.x_axis);
-    basis_ = mat3(vec3(0., -2., 0.), vec3(2., 0., 0.), vec3(0., 0., 2.));
+    (t.matrix3.x_axis, t.matrix3.y_axis) = (-t.matrix3.y_axis, t.matrix3.x_axis);
+    t_ = Affine3A::from_cols(
+        Vec3A::new(0., -2., 0.),
+        Vec3A::new(2., 0., 0.),
+        Vec3A::new(0., 0., 2.),
+        t.translation,
+    );
+    t.translation += t.matrix3.y_axis * ((SQRT_2 + 1.) * -2.);
 
-    origin = vec3(SQRT_2 * -2. - 4., 0., 0.);
     draw_double_joint(
         &mut *layer1,
-        &basis_,
-        &origin,
+        &t_,
         r,
         vec2(40., 16.) / 64.,
         vec3(4., 4., 4.) / 64.,
@@ -904,8 +923,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_double_joint(
             &mut *layer2,
-            &basis_,
-            &origin,
+            &t_,
             r,
             vec2(40., 32.) / 64.,
             vec3(4., 4., 4.) / 64.,
@@ -916,18 +934,20 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw right elbow
-    basis_ = input.relbow_basis;
-    orthonormalize(&mut basis_);
-    r_ = get_angle_x(&basis_).clamp(-FRAC_PI_2, FRAC_PI_2);
+    t_ = Affine3A {
+        matrix3: input.relbow_basis.into(),
+        translation: t.translation,
+    };
+    orthonormalize(&mut t_.matrix3);
+    r_ = get_angle_x(&t_.matrix3).clamp(-FRAC_PI_2, FRAC_PI_2);
     r.y = r.y.clamp(-FRAC_PI_2, FRAC_PI_2);
-    origin += basis.y_axis * ((SQRT_2 + 1.) * -2.);
-    basis_ = basis * 2.;
-    basis = basis * Mat3::from_rotation_x(r_);
+    t_.matrix3 = t.matrix3 * 2.;
+    t.matrix3 *= Mat3A::from_rotation_x(r_);
+    t.translation += t.matrix3.y_axis * -4.;
 
     draw_single_joint(
         &mut *layer1,
-        &basis_,
-        &origin,
+        &t_,
         r_,
         vec2(40., 20.) / 64.,
         vec3(4., 4., 4.) / 64.,
@@ -937,8 +957,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_single_joint(
             &mut *layer2,
-            &basis_,
-            &origin,
+            &t_,
             r_,
             vec2(40., 36.) / 64.,
             vec3(4., 4., 4.) / 64.,
@@ -948,12 +967,9 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw right hand
-    origin += basis.y_axis * -4.;
-
     draw_hand(
         &mut *layer1,
-        &basis,
-        &origin,
+        &t,
         vec2(40., 24.) / 64.,
         vec2(48., 16.) / 64.,
         2.,
@@ -961,8 +977,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_hand(
             &mut *layer2,
-            &basis,
-            &origin,
+            &t,
             vec2(40., 40.) / 64.,
             vec2(48., 32.) / 64.,
             2. + input.layer2_off,
@@ -970,20 +985,24 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw left leg
-    basis_ = input.lleg_basis;
-    orthonormalize(&mut basis_);
-    r = euler_angle_yxy(&basis_);
+    t = Affine3A::from_mat3_translation(input.lleg_basis, Vec3::new(2., SQRT_2 * -2. - 10., 0.));
+    orthonormalize(&mut t.matrix3);
+    r = euler_angle_yxy(&t.matrix3);
     r.y = r.y.clamp(-FRAC_PI_2, FRAC_PI_2);
-    basis = Mat3::from_quat(
+    t_ = Affine3A::from_cols(
+        Vec3A::new(2., 0., 0.),
+        Vec3A::new(0., 2., 0.),
+        Vec3A::new(0., 0., 2.),
+        t.translation,
+    );
+    t.matrix3 = Mat3A::from_quat(
         Quat::from_rotation_y(-r.z) * Quat::from_rotation_x(-r.y) * Quat::from_rotation_y(-r.x),
     );
-    basis_ = mat3(vec3(2., 0., 0.), vec3(0., 2., 0.), vec3(0., 0., 2.));
+    t.translation += t.matrix3.y_axis * ((SQRT_2 + 1.) * -2.);
 
-    origin = vec3(2., SQRT_2 * -2. - 10., 0.);
     draw_double_joint(
         &mut *layer1,
-        &basis_,
-        &origin,
+        &t_,
         r,
         vec2(16., 48.) / 64.,
         vec3(4., 4., 4.) / 64.,
@@ -994,8 +1013,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_double_joint(
             &mut *layer2,
-            &basis_,
-            &origin,
+            &t_,
             r,
             vec2(0., 48.) / 64.,
             vec3(4., 4., 4.) / 64.,
@@ -1006,17 +1024,19 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw left knee
-    basis_ = input.lknee_basis;
-    orthonormalize(&mut basis_);
-    r_ = get_angle_x(&basis_).clamp(-FRAC_PI_2, FRAC_PI_2);
-    origin += basis.y_axis * ((SQRT_2 + 1.) * -2.);
-    basis_ = basis * 2.;
-    basis = basis * Mat3::from_rotation_x(r_);
+    t_ = Affine3A {
+        matrix3: input.lknee_basis.into(),
+        translation: t.translation,
+    };
+    orthonormalize(&mut t_.matrix3);
+    r_ = get_angle_x(&t_.matrix3).clamp(-FRAC_PI_2, FRAC_PI_2);
+    t_.matrix3 = t.matrix3 * 2.;
+    t.matrix3 *= Mat3A::from_rotation_x(r_);
+    t.translation += t.matrix3.y_axis * -4.;
 
     draw_single_joint(
         &mut *layer1,
-        &basis_,
-        &origin,
+        &t_,
         r_,
         vec2(16., 52.) / 64.,
         vec3(4., 4., 4.) / 64.,
@@ -1026,8 +1046,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_single_joint(
             &mut *layer2,
-            &basis_,
-            &origin,
+            &t_,
             r_,
             vec2(0., 52.) / 64.,
             vec3(4., 4., 4.) / 64.,
@@ -1037,12 +1056,9 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw left foot
-    origin += basis.y_axis * -4.;
-
     draw_hand(
         &mut *layer1,
-        &basis,
-        &origin,
+        &t,
         vec2(16., 56.) / 64.,
         vec2(24., 48.) / 64.,
         2.,
@@ -1050,8 +1066,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_hand(
             &mut *layer2,
-            &basis,
-            &origin,
+            &t,
             vec2(0., 56.) / 64.,
             vec2(8., 48.) / 64.,
             2. + input.layer2_off,
@@ -1059,20 +1074,24 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw right leg
-    basis_ = input.rleg_basis;
-    orthonormalize(&mut basis_);
-    r = euler_angle_yxy(&basis_);
+    t = Affine3A::from_mat3_translation(input.rleg_basis, Vec3::new(-2., SQRT_2 * -2. - 10., 0.));
+    orthonormalize(&mut t.matrix3);
+    r = euler_angle_yxy(&t.matrix3);
     r.y = r.y.clamp(-FRAC_PI_2, FRAC_PI_2);
-    basis = Mat3::from_quat(
+    t_ = Affine3A::from_cols(
+        Vec3A::new(2., 0., 0.),
+        Vec3A::new(0., 2., 0.),
+        Vec3A::new(0., 0., 2.),
+        t.translation,
+    );
+    t.matrix3 = Mat3A::from_quat(
         Quat::from_rotation_y(-r.z) * Quat::from_rotation_x(-r.y) * Quat::from_rotation_y(-r.x),
     );
-    basis_ = mat3(vec3(2., 0., 0.), vec3(0., 2., 0.), vec3(0., 0., 2.));
+    t.translation += t.matrix3.y_axis * ((SQRT_2 + 1.) * -2.);
 
-    origin = vec3(-2., SQRT_2 * -2. - 10., 0.);
     draw_double_joint(
         &mut *layer1,
-        &basis_,
-        &origin,
+        &t_,
         r,
         vec2(0., 16.) / 64.,
         vec3(4., 4., 4.) / 64.,
@@ -1083,8 +1102,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_double_joint(
             &mut *layer2,
-            &basis_,
-            &origin,
+            &t_,
             r,
             vec2(0., 32.) / 64.,
             vec3(4., 4., 4.) / 64.,
@@ -1095,17 +1113,19 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw right knee
-    basis_ = input.rknee_basis;
-    orthonormalize(&mut basis_);
-    r_ = get_angle_x(&basis_).clamp(-FRAC_PI_2, FRAC_PI_2);
-    origin += basis.y_axis * ((SQRT_2 + 1.) * -2.);
-    basis_ = basis * 2.;
-    basis = basis * Mat3::from_rotation_x(r_);
+    t_ = Affine3A {
+        matrix3: input.rknee_basis.into(),
+        translation: t.translation,
+    };
+    orthonormalize(&mut t_.matrix3);
+    r_ = get_angle_x(&t_.matrix3).clamp(-FRAC_PI_2, FRAC_PI_2);
+    t_.matrix3 = t.matrix3 * 2.;
+    t.matrix3 *= Mat3A::from_rotation_x(r_);
+    t.translation += t.matrix3.y_axis * -4.;
 
     draw_single_joint(
         &mut *layer1,
-        &basis_,
-        &origin,
+        &t_,
         r_,
         vec2(0., 20.) / 64.,
         vec3(4., 4., 4.) / 64.,
@@ -1115,8 +1135,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_single_joint(
             &mut *layer2,
-            &basis_,
-            &origin,
+            &t_,
             r_,
             vec2(0., 36.) / 64.,
             vec3(4., 4., 4.) / 64.,
@@ -1126,12 +1145,9 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     }
 
     // Draw right foot
-    origin += basis.y_axis * -4.;
-
     draw_hand(
         &mut *layer1,
-        &basis,
-        &origin,
+        &t,
         vec2(0., 24.) / 64.,
         vec2(8., 16.) / 64.,
         2.,
@@ -1139,8 +1155,7 @@ fn build_mesh(input: &Angles, layer1: &mut State, layer2: &mut State) {
     if use_layer2 {
         draw_hand(
             &mut *layer2,
-            &basis,
-            &origin,
+            &t,
             vec2(0., 40.) / 64.,
             vec2(8., 32.) / 64.,
             2. + input.layer2_off,

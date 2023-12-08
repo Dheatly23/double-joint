@@ -7,4 +7,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-glam = "^0.24"
+glam = { version = "^0.24", features = ["fast-math"] }
+
+[features]
+core-simd = []

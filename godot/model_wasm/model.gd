@@ -195,6 +195,8 @@ func _ready():
 	if __inst == null:
 		return
 
+	get_tree().create_timer(0.5).timeout.connect(__bench)
+
 func _process(_delta):
 	if queue_rerender:
 		__render()
@@ -203,3 +205,12 @@ func _process(_delta):
 func __write(ptr: int, sz: int) -> void:
 	var buf: PackedByteArray = __inst.memory_read(ptr, sz)
 	print(buf.get_string_from_utf8())
+
+func __bench():
+	const N: int = 1000
+	var time := Time.get_ticks_usec()
+	for i in range(N):
+		__render()
+	time = Time.get_ticks_usec() - time
+
+	print("Render time: %.3f ms" % [(time as float) / (N as float) / 1000.0])

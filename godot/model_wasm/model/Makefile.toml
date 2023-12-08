@@ -17,17 +17,37 @@ TARGET_PROFILE = "debug"
 BUILD_PROFILE = "release"
 TARGET_PROFILE = "release"
 
-[tasks.build]
+[tasks.build-stable]
 command = "cargo"
 args = [
   "build",
   "--profile",
   "${BUILD_PROFILE}",
-  "@@split(BUILD_EXTRA_ARGS,;)",
+  "--target",
+  "wasm32-unknown-unknown",
 ]
 
+[tasks.build-nightly]
+command = "cargo"
+args = [
+  "build",
+  "--profile",
+  "${BUILD_PROFILE}",
+  "--target",
+  "wasm32-unknown-unknown",
+  "--features",
+  "core-simd",
+]
+
+[[tasks.build_.run_task]]
+name = "build-nightly"
+condition = { channels = ["nightly"] }
+
+[[tasks.build_.run_task]]
+name = "build-stable"
+
 [tasks.deploy]
-dependencies = ["build"]
+dependencies = ["build_"]
 script_runner = "@duckscript"
 script = '''
 f = concat ${CARGO_MAKE_CRATE_FS_NAME} ".wasm"
@@ -39,12 +59,13 @@ echo Copy ${src_file} to ${dst_file}
 cp ${src_file} ${dst_file}
 
 if set ${WASM_SNIP}
-  echo "Running wasm-snip"
-  exec --fail-on-error ${WASM_SNIP} --snip-rust-panicking-code ${dst_file} -o ${dst_file}
+  # Apparently wasm-snip does not support SIMD yet :(
+  #echo "Running wasm-snip"
+  #exec --fail-on-error ${WASM_SNIP} --snip-rust-panicking-code ${dst_file} -o ${dst_file}
 end
 
 if set ${WASM_OPT}
   echo "Running wasm-opt"
-  exec --fail-on-error ${WASM_OPT} -O3 ${dst_file} -o ${dst_file}
+  exec --fail-on-error ${WASM_OPT} -O4 -g ${dst_file} -o ${dst_file}
 end
 '''

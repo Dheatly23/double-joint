@@ -53,8 +53,9 @@ pub extern "C" fn build() {
     }
 }
 
-fn octahedron_encode(mut norm: Vec3) -> (u16, u16) {
-    norm *= (norm.x.abs() + norm.y.abs() + norm.z.abs()).recip();
+#[cfg(not(target_feature = "simd128"))]
+fn octahedron_encode(norm: &Vec3) -> (u16, u16) {
+    let norm = norm / (norm.x.abs() + norm.y.abs() + norm.z.abs());
     let mut out = norm.xy();
     if norm.z.is_sign_negative() {
         out = (1. - out.yx().abs()) * out.signum();
@@ -64,8 +65,40 @@ fn octahedron_encode(mut norm: Vec3) -> (u16, u16) {
     (out.x as _, out.y as _)
 }
 
-fn octahedron_tangent_encode(tangent: Vec4) -> (u16, u16) {
-    let d = (tangent.x.abs() + tangent.y.abs() + tangent.z.abs()).recip();
+#[cfg(target_feature = "simd128")]
+fn octahedron_encode(norm: &Vec3) -> (u16, u16) {
+    use core::arch::wasm32::*;
+
+    let mut norm = f32x4(norm.x, norm.y, norm.z, 0.);
+    let mut d = f32x4_abs(norm);
+    d = f32x4_add(d, i32x4_shuffle::<2, 3, 0, 0>(d, d));
+    d = f32x4_add(d, i32x4_shuffle::<1, 0, 0, 0>(d, d));
+    norm = f32x4_div(norm, i32x4_shuffle::<0, 0, 0, 0>(d, d));
+
+    let mut out = f32x4_sub(f32x4_splat(1.), f32x4_abs(norm));
+    out = i32x4_shuffle::<0, 5, 1, 4>(norm, out);
+    d = i64x2_shl(i64x2_shr(out, 31), 63);
+    out = v128_xor(out, d);
+
+    out = f32x4_add(f32x4_mul(out, f32x4_splat(32767.5)), f32x4_splat(32767.5));
+    out = u32x4_min(u32x4_trunc_sat_f32x4(out), u32x4_splat(0xffff));
+
+    d = i32x4_ge(norm, i32x4_splat(0));
+    d = i32x4_shuffle::<2, 2, 2, 2>(d, d);
+    out = v128_bitselect(out, i64x2_shr(out, 32), d);
+
+    (u16x8_extract_lane::<0>(out), u16x8_extract_lane::<4>(out))
+}
+
+#[cfg(not(target_feature = "simd128"))]
+fn octahedron_tangent_encode(tangent: &Vec4) -> (u16, u16) {
+    let d = tangent
+        .abs()
+        .xyz()
+        .to_array()
+        .into_iter()
+        .sum::<f32>()
+        .recip();
 
     let mut out = tangent.xy() * d;
     if (tangent.z * d).is_sign_negative() {
@@ -84,6 +117,44 @@ fn octahedron_tangent_encode(tangent: Vec4) -> (u16, u16) {
     }
 }
 
+#[cfg(target_feature = "simd128")]
+fn octahedron_tangent_encode(tangent: &Vec4) -> (u16, u16) {
+    use core::arch::wasm32::*;
+
+    let mut tangent = v128::from(*tangent);
+    let mut d = f32x4_abs(i32x4_replace_lane::<3>(tangent, 0));
+    d = f32x4_add(d, i32x4_shuffle::<2, 3, 0, 0>(d, d));
+    d = f32x4_add(d, i32x4_shuffle::<1, 0, 0, 0>(d, d));
+    tangent = f32x4_div(tangent, i32x4_shuffle::<0, 0, 0, 4>(d, f32x4_splat(1.)));
+
+    let mut out = f32x4_sub(f32x4_splat(1.), f32x4_abs(tangent));
+    out = i32x4_shuffle::<0, 5, 1, 4>(tangent, out);
+    d = i64x2_shl(i64x2_shr(out, 31), 63);
+    out = v128_xor(out, d);
+    out = f32x4_add(f32x4_mul(out, f32x4_splat(0.5)), f32x4_splat(0.5));
+
+    const C: f32 = 1. / 32767.;
+    out = f32x4_max(out, f32x4(f32::NEG_INFINITY, f32::NEG_INFINITY, C, C));
+    out = f32x4_mul(out, f32x4(1.0, 1.0, 0.5, 0.5));
+    out = f32x4_add(out, f32x4(0.0, 0.0, 0.5, 0.5));
+    if i32x4_extract_lane::<3>(tangent) < 0 {
+        out = v128_xor(out, i32x4(0, 0, i32::MIN, i32::MIN));
+        out = f32x4_add(out, f32x4(0., 0., 1., 1.));
+    }
+
+    out = f32x4_mul(out, f32x4_splat(65535.));
+    out = u32x4_min(u32x4_trunc_sat_f32x4(out), u32x4_splat(0xffff));
+
+    d = i32x4_ge(tangent, i32x4_splat(0));
+    d = i32x4_shuffle::<2, 2, 2, 2>(d, d);
+    out = v128_bitselect(out, i64x2_shr(out, 32), d);
+
+    match (u16x8_extract_lane::<0>(out), u16x8_extract_lane::<4>(out)) {
+        (0, 65535) => (65535, 65535),
+        v => v,
+    }
+}
+
 fn orthonormalize(basis: &mut Mat3A) {
     let Mat3A {
         x_axis: x,
@@ -91,8 +162,8 @@ fn orthonormalize(basis: &mut Mat3A) {
         z_axis: z,
     } = basis;
     *x = x.normalize();
-    *y = (*y - *x * x.dot(*y)).normalize();
-    *z = (*z - *x * x.dot(*z) - *y * y.dot(*z)).normalize();
+    *y = (*y - *x * x.dot_into_vec(*y)).normalize();
+    *z = (*z - *x * x.dot_into_vec(*z) - *y * y.dot_into_vec(*z)).normalize();
 }
 
 const ONEISH: f32 = 1.0 - 1e-6;
@@ -1174,8 +1245,8 @@ fn set_data(state: &mut State) {
                     .iter()
                     .zip(tangent)
                     .flat_map(|(n, t)| {
-                        let (xn, yn) = octahedron_encode(*n);
-                        let (xt, yt) = octahedron_tangent_encode(*t);
+                        let (xn, yn) = octahedron_encode(n);
+                        let (xt, yt) = octahedron_tangent_encode(t);
                         [xn, yn, xt, yt]
                     })
                     .flat_map(|v| v.to_le_bytes()),

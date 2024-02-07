@@ -47,8 +47,8 @@ func __render():
 				},
 			},
 			{
-				"engine.use_epoch": true,
-				"engine.epoch_timeout": 1,
+				"epoch.enable": true,
+				"epoch.timeout": 1,
 			},
 		)
 		__ptr = __inst.call_wasm(&"init", [])[0]

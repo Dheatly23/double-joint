@@ -1,6 +1,6 @@
 extends Node
 
-@onready var __file: WasmFile = load("res://model_wasm/model.wasm")
+@onready var __file: WasmModule = load("res://model_wasm/model.wasm")
 @onready var __inst: WasmInstance = __file.instantiate({}, {
 	"epoch.enable": true,
 	"epoch.timeout": 1,

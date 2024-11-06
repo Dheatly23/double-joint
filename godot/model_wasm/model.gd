@@ -34,7 +34,7 @@ func __render():
 	if Engine.is_editor_hint():
 		__mesh = $Mesh.mesh
 		__skel = $Skeleton
-		__inst = WasmHelper.load_wasm_file("", "res://model_wasm/model.wasm").instantiate(
+		__inst = load("res://model_wasm/model.wasm").instantiate(
 			{
 				write = {
 					params = [

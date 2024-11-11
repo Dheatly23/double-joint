@@ -1,0 +1,617 @@
+{
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 1104,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 1104,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 1104,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 1104,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5121,
+      "count": 1104,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5123,
+      "count": 3288,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 1104,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 1104,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 66,
+      "type": "MAT4"
+    }
+  ],
+  "asset": {
+    "copyright": "Dheatly (2024)",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 13248,
+      "byteOffset": 17664
+    },
+    {
+      "buffer": 0,
+      "byteLength": 13248,
+      "byteOffset": 30912
+    },
+    {
+      "buffer": 0,
+      "byteLength": 8832,
+      "byteOffset": 57408
+    },
+    {
+      "buffer": 0,
+      "byteLength": 17664,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 4416,
+      "byteOffset": 85872
+    },
+    {
+      "buffer": 0,
+      "byteLength": 6576,
+      "byteOffset": 79296
+    },
+    {
+      "buffer": 0,
+      "byteLength": 8832,
+      "byteOffset": 66240
+    },
+    {
+      "buffer": 0,
+      "byteLength": 13248,
+      "byteOffset": 44160
+    },
+    {
+      "buffer": 0,
+      "byteLength": 4224,
+      "byteOffset": 75072
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 90288,
+      "uri": "mesh_v2.bin"
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "JOINTS_0": 4,
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2,
+            "WEIGHTS_0": 3
+          },
+          "indices": 5,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "JOINTS_0": 4,
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 6,
+            "WEIGHTS_0": 3
+          },
+          "indices": 5,
+          "mode": 4,
+          "targets": [
+            {
+              "POSITION": 7
+            }
+          ]
+        }
+      ],
+      "weights": [
+        0.0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "left_elbow_l0"
+    },
+    {
+      "name": "left_elbow_l1"
+    },
+    {
+      "name": "left_elbow_u0"
+    },
+    {
+      "name": "left_elbow_u1"
+    },
+    {
+      "children": [
+        2,
+        3
+      ],
+      "name": "left_elbow"
+    },
+    {
+      "children": [
+        4,
+        0,
+        1
+      ],
+      "name": "left_elbow_shift",
+      "translation": [
+        0.0,
+        -4.82842712474619,
+        0.0
+      ]
+    },
+    {
+      "name": "left_arm_l00"
+    },
+    {
+      "name": "left_arm_l01"
+    },
+    {
+      "name": "left_arm_l10"
+    },
+    {
+      "name": "left_arm_l11"
+    },
+    {
+      "name": "left_arm_u00"
+    },
+    {
+      "name": "left_arm_u01"
+    },
+    {
+      "name": "left_arm_u10"
+    },
+    {
+      "name": "left_arm_u11"
+    },
+    {
+      "children": [
+        5,
+        10,
+        11,
+        12,
+        13
+      ],
+      "name": "left_arm"
+    },
+    {
+      "children": [
+        14,
+        6,
+        7,
+        8,
+        9
+      ],
+      "name": "left_arm_shift",
+      "rotation": [
+        0.0,
+        0.0,
+        0.7071067811865476,
+        0.7071067811865476
+      ],
+      "translation": [
+        6.82842712474619,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "right_elbow_l0"
+    },
+    {
+      "name": "right_elbow_l1"
+    },
+    {
+      "name": "right_elbow_u0"
+    },
+    {
+      "name": "right_elbow_u1"
+    },
+    {
+      "children": [
+        18,
+        19
+      ],
+      "name": "right_elbow"
+    },
+    {
+      "children": [
+        20,
+        16,
+        17
+      ],
+      "name": "right_elbow_shift",
+      "translation": [
+        0.0,
+        -4.82842712474619,
+        0.0
+      ]
+    },
+    {
+      "name": "right_arm_l00"
+    },
+    {
+      "name": "right_arm_l01"
+    },
+    {
+      "name": "right_arm_l10"
+    },
+    {
+      "name": "right_arm_l11"
+    },
+    {
+      "name": "right_arm_u00"
+    },
+    {
+      "name": "right_arm_u01"
+    },
+    {
+      "name": "right_arm_u10"
+    },
+    {
+      "name": "right_arm_u11"
+    },
+    {
+      "children": [
+        21,
+        26,
+        27,
+        28,
+        29
+      ],
+      "name": "right_arm"
+    },
+    {
+      "children": [
+        30,
+        22,
+        23,
+        24,
+        25
+      ],
+      "name": "right_arm_shift",
+      "rotation": [
+        0.0,
+        0.0,
+        -0.7071067811865476,
+        0.7071067811865476
+      ],
+      "translation": [
+        -6.82842712474619,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "left_knee_l0"
+    },
+    {
+      "name": "left_knee_l1"
+    },
+    {
+      "name": "left_knee_u0"
+    },
+    {
+      "name": "left_knee_u1"
+    },
+    {
+      "children": [
+        34,
+        35
+      ],
+      "name": "left_knee"
+    },
+    {
+      "children": [
+        36,
+        32,
+        33
+      ],
+      "name": "left_knee_shift",
+      "translation": [
+        0.0,
+        -4.82842712474619,
+        0.0
+      ]
+    },
+    {
+      "name": "left_leg_l00"
+    },
+    {
+      "name": "left_leg_l01"
+    },
+    {
+      "name": "left_leg_l10"
+    },
+    {
+      "name": "left_leg_l11"
+    },
+    {
+      "name": "left_leg_u00"
+    },
+    {
+      "name": "left_leg_u01"
+    },
+    {
+      "name": "left_leg_u10"
+    },
+    {
+      "name": "left_leg_u11"
+    },
+    {
+      "children": [
+        37,
+        42,
+        43,
+        44,
+        45
+      ],
+      "name": "left_leg"
+    },
+    {
+      "children": [
+        46,
+        38,
+        39,
+        40,
+        41
+      ],
+      "name": "left_leg_shift",
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "translation": [
+        2.0,
+        -12.82842712474619,
+        0.0
+      ]
+    },
+    {
+      "name": "right_knee_l0"
+    },
+    {
+      "name": "right_knee_l1"
+    },
+    {
+      "name": "right_knee_u0"
+    },
+    {
+      "name": "right_knee_u1"
+    },
+    {
+      "children": [
+        50,
+        51
+      ],
+      "name": "right_knee"
+    },
+    {
+      "children": [
+        52,
+        48,
+        49
+      ],
+      "name": "right_knee_shift",
+      "translation": [
+        0.0,
+        -4.82842712474619,
+        0.0
+      ]
+    },
+    {
+      "name": "right_leg_u00"
+    },
+    {
+      "name": "right_leg_u01"
+    },
+    {
+      "name": "right_leg_u10"
+    },
+    {
+      "name": "right_leg_u11"
+    },
+    {
+      "name": "right_leg_l00"
+    },
+    {
+      "name": "right_leg_l01"
+    },
+    {
+      "name": "right_leg_l10"
+    },
+    {
+      "name": "right_leg_l11"
+    },
+    {
+      "children": [
+        53,
+        58,
+        59,
+        60,
+        61
+      ],
+      "name": "right_leg"
+    },
+    {
+      "children": [
+        62,
+        54,
+        55,
+        56,
+        57
+      ],
+      "name": "right_leg_shift",
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "translation": [
+        -2.0,
+        -12.82842712474619,
+        0.0
+      ]
+    },
+    {
+      "name": "head",
+      "translation": [
+        0.0,
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "children": [
+        64,
+        15,
+        31,
+        47,
+        63
+      ],
+      "name": "body"
+    },
+    {
+      "mesh": 0,
+      "name": "mesh_l",
+      "skin": 0
+    },
+    {
+      "mesh": 1,
+      "name": "mesh_h",
+      "skin": 0
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        66,
+        67,
+        65
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "inverseBindMatrices": 8,
+      "joints": [
+        65,
+        64,
+        15,
+        6,
+        7,
+        8,
+        9,
+        14,
+        10,
+        11,
+        12,
+        13,
+        5,
+        0,
+        1,
+        4,
+        2,
+        3,
+        31,
+        22,
+        23,
+        24,
+        25,
+        30,
+        26,
+        27,
+        28,
+        29,
+        21,
+        16,
+        17,
+        20,
+        18,
+        19,
+        47,
+        38,
+        39,
+        40,
+        41,
+        46,
+        42,
+        43,
+        44,
+        45,
+        37,
+        32,
+        33,
+        36,
+        34,
+        35,
+        63,
+        54,
+        55,
+        56,
+        57,
+        62,
+        58,
+        59,
+        60,
+        61,
+        53,
+        48,
+        49,
+        52,
+        50,
+        51
+      ],
+      "skeleton": 65
+    }
+  ]
+}

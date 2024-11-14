@@ -1,5 +1,5 @@
 @tool
-extends Node3D
+extends Skeleton3D
 
 const PI_2 := PI / 2
 const SQRT_2 := sqrt(2)
@@ -15,8 +15,7 @@ static var BONES := PackedInt32Array([
 
 const MESH1: NodePath = ^"Mesh/Skeleton3D/mesh_l"
 const MESH2: NodePath = ^"Mesh/Skeleton3D/mesh_h"
-const SKEL: NodePath = ^"Skeleton"
-const SSKEL: NodePath = ^"Mesh/Skeleton3D"
+const SKEL: NodePath = ^"Mesh/Skeleton3D"
 
 @export var material: Material:
 	set(v):
@@ -41,9 +40,8 @@ func rerender() -> void:
 	m2.visible = material_layer2 != null
 	m2.set_blend_shape_value(0, layer2_offset)
 
-func _enter_tree() -> void:
-	var s: Skeleton3D = get_node(SKEL)
-	s.skeleton_updated.connect(__update)
+func _ready() -> void:
+	skeleton_updated.connect(__update)
 
 func _process(_delta: float) -> void:
 	if queue_rerender:
@@ -51,58 +49,57 @@ func _process(_delta: float) -> void:
 
 		rerender()
 
-func __update():
+func __update() -> void:
 	var s: Skeleton3D = get_node(SKEL)
-	var s_: Skeleton3D = get_node(SSKEL)
 
 	# Body
-	s_.set_bone_pose(BONES[0], s.get_bone_pose(0))
+	s.set_bone_pose(BONES[0], get_bone_pose(0))
 	# Head
-	s_.set_bone_pose(BONES[1], s.get_bone_pose(1))
+	s.set_bone_pose(BONES[1], get_bone_pose(1))
 
 	# Left arm
 	__update_djoint(
-		s_,
+		s,
 		2,
-		-_get_euler_xyx(Basis(s.get_bone_pose_rotation(3) * Quaternion(0, 0, -SQRT_1_2, SQRT_1_2))),
+		-_get_euler_xyx(Basis(get_bone_pose_rotation(3) * Quaternion(0, 0, -SQRT_1_2, SQRT_1_2))),
 		Quaternion(0, 0, SQRT_1_2, SQRT_1_2),
 		false,
 	)
 	# Left elbow
-	__update_sjoint(s_, 12, s.get_bone_pose_rotation(4).get_euler(EULER_ORDER_XYZ).x)
+	__update_sjoint(s, 12, get_bone_pose_rotation(4).get_euler(EULER_ORDER_XYZ).x)
 
 	# Right arm
 	__update_djoint(
-		s_,
+		s,
 		18,
-		_get_euler_xyx(Basis(s.get_bone_pose_rotation(6) * Quaternion(0, 0, SQRT_1_2, SQRT_1_2))),
+		_get_euler_xyx(Basis(get_bone_pose_rotation(6) * Quaternion(0, 0, SQRT_1_2, SQRT_1_2))),
 		Quaternion(0, 0, -SQRT_1_2, SQRT_1_2),
 		true,
 	)
 	# Right elbow
-	__update_sjoint(s_, 28, s.get_bone_pose_rotation(7).get_euler(EULER_ORDER_XYZ).x)
+	__update_sjoint(s, 28, get_bone_pose_rotation(7).get_euler(EULER_ORDER_XYZ).x)
 
 	# Left leg
 	__update_djoint(
-		s_,
+		s,
 		34,
-		-_get_euler_yxy(Basis(s.get_bone_pose_rotation(9))),
+		-_get_euler_yxy(Basis(get_bone_pose_rotation(9))),
 		Quaternion.IDENTITY,
 		true,
 	)
 	# Left knee
-	__update_sjoint(s_, 44, s.get_bone_pose_rotation(10).get_euler(EULER_ORDER_XYZ).x)
+	__update_sjoint(s, 44, get_bone_pose_rotation(10).get_euler(EULER_ORDER_XYZ).x)
 
 	# Right leg
 	__update_djoint(
-		s_,
+		s,
 		50,
-		-_get_euler_yxy(Basis(s.get_bone_pose_rotation(12))),
+		-_get_euler_yxy(Basis(get_bone_pose_rotation(12))),
 		Quaternion.IDENTITY,
 		true,
 	)
 	# Right knee
-	__update_sjoint(s_, 60, s.get_bone_pose_rotation(13).get_euler(EULER_ORDER_XYZ).x)
+	__update_sjoint(s, 60, get_bone_pose_rotation(13).get_euler(EULER_ORDER_XYZ).x)
 
 static func __update_sjoint(s: Skeleton3D, i: int, r: float) -> void:
 	r = clampf(r, -PI_2, PI_2)

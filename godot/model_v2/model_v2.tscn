@@ -8,11 +8,7 @@
 albedo_texture = ExtResource("2_wjr88")
 texture_filter = 0
 
-[node name="Model" type="Node3D"]
-script = ExtResource("1_xmsiy")
-material = SubResource("StandardMaterial3D_cd88m")
-
-[node name="Skeleton" type="Skeleton3D" parent="."]
+[node name="Model" type="Skeleton3D"]
 bones/0/name = "body"
 bones/0/parent = -1
 bones/0/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
@@ -118,5 +114,7 @@ bones/14/enabled = true
 bones/14/position = Vector3(0, -4, 0)
 bones/14/rotation = Quaternion(0, 0, 0, 1)
 bones/14/scale = Vector3(1, 1, 1)
+script = ExtResource("1_xmsiy")
+material = SubResource("StandardMaterial3D_cd88m")
 
 [node name="Mesh" parent="." instance=ExtResource("4_3palp")]
